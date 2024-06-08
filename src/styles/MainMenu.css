@@ -1,0 +1,26 @@
+.cuadroGris{
+    background-color: ghostwhite;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    padding: 20px;
+    margin-top: 10%;
+    border-radius: 20px;
+}
+
+.papa{
+    display: flex;
+    justify-content: center;
+}
+
+.primerDiv{
+    display: flex;
+    justify-content:space-around;
+    flex-direction: row;
+}
+
+.btnP{
+    margin: 5px;
+    width: 200px!important;
+}
+
