@@ -13,6 +13,8 @@ import DetalleButton from '../DetalleButton.tsx/DetalleButton';
 
 function VentaTable() {
 
+  const[ventaID, setVentaID] = useState<Number>();
+
     const[ventas, setVentas] = useState<Venta[]>([]);
 
         //Actualiza la tabla cada vez que se produce un cambio
@@ -35,7 +37,6 @@ const[refreshData, setRefreshData] = useState (false);
 
     return {
       id:0,
-      detalle:"",
       montoTotal:0,
       fechaVenta: ""
     };
@@ -51,11 +52,12 @@ const[refreshData, setRefreshData] = useState (false);
   const [nombre, setNombre] = useState("");
   
   //Logica del modal
-  const handleClick = (newNombre: string, venta: Venta, modal: ModalType ) => {
+  const handleClick = (newNombre: string, venta: Venta, modal: ModalType, ventaID?: number) => {
     setNombre(newNombre);
     setModalType(modal);
     setVenta(venta);
     setShowModal(true);
+    setVentaID(ventaID);
   }
   
 
@@ -80,10 +82,9 @@ const[refreshData, setRefreshData] = useState (false);
         {ventas.map(venta=> (
           <tr key = {venta.id}>
               <td>{venta.id}</td>
-              <td>{venta.detalle}</td>
               <td>{venta.montoTotal}</td>
               <td>{venta.fechaVenta}</td>
-              <td><DetalleButton onClick={()=> handleClick("Editar venta", venta, ModalType.UPDATE)}></DetalleButton></td>
+              <td><DetalleButton onClick={()=> handleClick("Editar venta", venta, ModalType.UPDATE, venta.id)}></DetalleButton></td>
               <td><DeleteButton onClick={()=> handleClick("Eliminar venta", venta, ModalType.DELETE)}></DeleteButton></td>
           </tr>
         ))}
@@ -99,6 +100,7 @@ const[refreshData, setRefreshData] = useState (false);
           modalType={modalType}
           venta={venta}
           refreshData={setRefreshData}
+          ventaID={ventaID||0}
           />
         )}
 

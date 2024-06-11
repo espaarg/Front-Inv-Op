@@ -5,15 +5,15 @@ const BASE_URL = 'http://localhost:8080';
 
 export const VentaArticuloService = {
 
-    getVentas:async (): Promise<VentaArticulo[]>=>{
+    getVentaArticulos:async (): Promise<VentaArticulo[]>=>{
         const response = await fetch(`${BASE_URL}/VentaArticulo/all`);
         const data = await response.json();
         return data;
     },
 
-    getVenta: async (id: number): Promise<VentaArticulo> => {
+    getVentaArticulo: async (id: number): Promise<VentaArticulo> => {
 
-        const response = await fetch(`${BASE_URL}/VentaArticulo/${id}`, {
+        const response = await fetch(`${BASE_URL}/VentaArticulo/id/${id}`, {
             method: "GET",
             headers: {
                 'Accept': '*/*',
@@ -25,7 +25,7 @@ export const VentaArticuloService = {
         return data;
     },
 
-    createVenta:async (venta: VentaArticulo): Promise<VentaArticulo> => {
+    createVentaArticulo:async (venta: VentaArticulo): Promise<VentaArticulo> => {
         const response = await fetch(`${BASE_URL}/VentaArticulo`, {
             method: "POST", 
             headers: {
@@ -41,7 +41,7 @@ export const VentaArticuloService = {
 
     },
 
-    updateVenta: async (id: number, venta: VentaArticulo): Promise<VentaArticulo> => {
+    updateVentaArticulo: async (id: number, venta: VentaArticulo): Promise<VentaArticulo> => {
         const response = await fetch(`${BASE_URL}/VentaArticulo/${id}`, {
             method: "PUT",
             headers: {
@@ -56,7 +56,7 @@ export const VentaArticuloService = {
         return data;
     }, 
 
-    deleteVenta:async (id:number): Promise<void> => {
+    deleteVentaArticulo:async (id:number): Promise<void> => {
         await fetch (`${BASE_URL}/Venta/${id}`,{
             method: "DELETE",
             headers: {

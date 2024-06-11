@@ -5,6 +5,7 @@ import { Venta } from "../../types/Venta";
 import { VentaService } from "../../services/VentaService";
 import { toast } from "react-toastify";
 import VentaArticuloTable from "../Tables/VentaArticuloTable";
+import { useState } from "react";
 
 type VentaModalProps = {
     show:boolean;
@@ -13,9 +14,12 @@ type VentaModalProps = {
     modalType: ModalType;
     venta: Venta;
     refreshData: React.Dispatch<React.SetStateAction<boolean>>;
+    ventaID: Number;
 }
 
-const VentaModal = ({show, onHide, nombre, modalType,venta: venta, refreshData}: VentaModalProps) => {
+const VentaModal = ({show, onHide, nombre, modalType,venta: venta, refreshData, ventaID}: VentaModalProps) => {
+
+    const[ventaArticuloID] = useState<Number> (ventaID)
 
     //CREATE-ACTUALIZAR
     const handleSaveUpdate = async (venta:Venta) => {
