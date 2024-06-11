@@ -1,20 +1,19 @@
-import {Articulo} from "../types/Articulo"
-
+import { Venta } from "../types/Venta";
 
 const BASE_URL = 'http://localhost:8080';
 
 
-export const ArticuloService = {
+export const VentaService = {
 
-    getVentas:async (): Promise<Articulo[]>=>{
-        const response = await fetch(`${BASE_URL}/Articulo/all`);
+    getVentas:async (): Promise<Venta[]>=>{
+        const response = await fetch(`${BASE_URL}/Venta/all`);
         const data = await response.json();
         return data;
     },
 
-    getArticulo: async (id: number): Promise<Articulo> => {
+    getVenta: async (id: number): Promise<Venta> => {
 
-        const response = await fetch(`${BASE_URL}/Articulo/${id}`, {
+        const response = await fetch(`${BASE_URL}/Venta/${id}`, {
             method: "GET",
             headers: {
                 'Accept': '*/*',
@@ -26,15 +25,15 @@ export const ArticuloService = {
         return data;
     },
 
-    createVenta:async (articulo: Articulo): Promise<Articulo> => {
-        const response = await fetch(`${BASE_URL}/Articulo`, {
+    createVenta:async (venta: Venta): Promise<Venta> => {
+        const response = await fetch(`${BASE_URL}/Venta`, {
             method: "POST", 
             headers: {
                 'Accept': '*/*',
                 'Authorization': `Bearer ` + localStorage.getItem('token'),
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(articulo)
+            body: JSON.stringify(venta)
         });
 
         const data = await response.json();
@@ -42,15 +41,15 @@ export const ArticuloService = {
 
     },
 
-    updateVenta: async (id: number, articulo: Articulo): Promise<Articulo> => {
-        const response = await fetch(`${BASE_URL}/Articulo/${id}`, {
+    updateVenta: async (id: number, venta: Venta): Promise<Venta> => {
+        const response = await fetch(`${BASE_URL}/Venta/${id}`, {
             method: "PUT",
             headers: {
                 'Accept': '*/*',
                 'Authorization': `Bearer ` + localStorage.getItem('token'),
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(articulo)
+            body: JSON.stringify(venta)
         });
 
         const data = await response.json();
@@ -58,7 +57,7 @@ export const ArticuloService = {
     }, 
 
     deleteVenta:async (id:number): Promise<void> => {
-        await fetch (`${BASE_URL}/Articulo/${id}`,{
+        await fetch (`${BASE_URL}/Venta/${id}`,{
             method: "DELETE",
             headers: {
                 'Accept': '*/*',

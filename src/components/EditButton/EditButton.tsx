@@ -15,3 +15,5 @@ export const EditButton = ({onClick}: EditButtonProps) => {
             />
     )
 }
+
+export default EditButton

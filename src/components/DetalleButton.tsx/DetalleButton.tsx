@@ -1,13 +1,13 @@
-import { TrashFill} from "react-bootstrap-icons";
+import {EyeFill} from "react-bootstrap-icons";
 
-interface DeleteButtonProps{
+interface DetalleButtonProps{
     onClick:()=> void;
 }
 
-export const DeleteButton = ({onClick}: DeleteButtonProps) => {
+export const DetalleButton = ({onClick}: DetalleButtonProps) => {
     return (
-        <TrashFill
-            color="#D32F2F"
+        <EyeFill
+            color="#FBC02D"
             size={24}
             onClick={onClick}
             onMouseEnter={()=> {document.body.style.cursor = 'pointer'}}
@@ -16,4 +16,4 @@ export const DeleteButton = ({onClick}: DeleteButtonProps) => {
     )
 }
 
-export default DeleteButton
+export default DetalleButton

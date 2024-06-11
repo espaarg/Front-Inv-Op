@@ -2,12 +2,14 @@ footer {
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: ghostwhite;
+    background-color: #ced4da;
     padding-top: 20px;
   }
 
 .container{
     display: flex;
     justify-content: center;
+    background-color: #ced4da;
+
 }
   

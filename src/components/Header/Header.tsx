@@ -6,8 +6,8 @@ const Header = () => {
 
     return (
 
-        <Navbar expand="lg" className="bg-body-tertiary">
-        <Container>
+      <Navbar expand="lg"  style={{backgroundColor:'#ced4da'}}>
+        <Container >
           <Navbar.Brand href="#home">LOGO</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">

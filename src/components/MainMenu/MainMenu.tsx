@@ -12,7 +12,7 @@ return(
           <h1>Menú</h1> 
             <div className="primerDiv">
                 <div>
-                    <div > <Button className="btnP" variant="primary">      Ventas        </Button></div>
+                    <div > <Button className="btnP" variant="primary" onClick={() => navigate('/ventas')}>      Ventas        </Button></div>
                     <div > <Button className="btnP"variant="primary" onClick={() => navigate('/articulos')}>     Artículos      </Button></div>
                     <div > <Button className="btnP" variant="primary">  Predecir Demanda  </Button></div>
                 </div>

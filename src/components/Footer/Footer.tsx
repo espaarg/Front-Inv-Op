@@ -4,7 +4,7 @@ const Footer = () => {
 
     return (
 
-        <footer className="footer">
+        <footer className="footer" >
         <div className="container">
           <p>LOGO</p>
         </div>
