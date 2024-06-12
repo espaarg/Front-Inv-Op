@@ -7,9 +7,7 @@ import { Button } from 'react-bootstrap';
 
 
 
-
-
-function VentaArticuloTable() {
+function VentaArticuloTable({ ventaID}: {ventaID: number}) {
 
     const[ventaArticulos, setVentaArticulos] = useState<VentaArticulo[]>([]);
 
@@ -19,12 +17,12 @@ const[refreshData, setRefreshData] = useState (false);
 //Se ejecuta cada vez que se renderiza el componente o refreshData cambia de estado
     useEffect(()=> {
       const fetchVentaArticulos = async ()=> {
-        const ventaArticulos = await VentaArticuloService.getVentas();
+        const ventaArticulos = await VentaArticuloService.getVentaArticulo(ventaID);
         setVentaArticulos(ventaArticulos);
   
       };
       fetchVentaArticulos();
-    }, [refreshData]
+    }, [ventaID]
   );
 
   console.log(JSON.stringify(ventaArticulos,null,2));
@@ -60,7 +58,6 @@ const[refreshData, setRefreshData] = useState (false);
   return (
     <>
     <div style={{display:'flex', justifyContent:'end'}}>      
-      <Button onClick={() => handleClick("Nuevo articulo", initializableNewVentaArticulo(),ModalType.CREATE)} style={{width:'150px', margin:'20px'}}>Añadir articulo</Button>
     </div>
       <div style={{display:'flex',justifyContent:'center', margin:'20px'}}>
       <Table style={{ width:'100%'}}>
@@ -68,19 +65,17 @@ const[refreshData, setRefreshData] = useState (false);
         <tr>
           <th>Id</th>
           <th>Nombre</th>
-          <th>Precio</th>
-          <th>Stock Actual</th>
-          <th>Editar</th>
-          <th>Borrar</th>
+          <th>SubTotal</th>
+          <th>Cantidad</th>
         </tr>
       </thead>
       <tbody>
-        {ventaArticulos.map(VentaArticulo=> (
-          <tr key = {VentaArticulo.id}>
-              <td>{VentaArticulo.id}</td>
-              <td>{VentaArticulo.nombreArticulo}</td>
-              <td>{VentaArticulo.subTotal}</td>
-              <td>{VentaArticulo.cantidadArticulo}</td>
+        {ventaArticulos.map(ventaArticulo=> (
+          <tr key = {ventaArticulo.id}>
+              <td>{ventaArticulo.id}</td>
+              <td>{ventaArticulo.nombreArticulo}</td>
+              <td>{ventaArticulo.subTotal}</td>
+              <td>{ventaArticulo.cantidadArticulo}</td>
           </tr>
         ))}
       </tbody>

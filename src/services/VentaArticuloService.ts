@@ -1,26 +1,19 @@
 import { VentaArticulo } from "../types/VentaArticulo";
 
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://localhost:8080/VentaArticulo';
 
 
 export const VentaArticuloService = {
 
     getVentaArticulos:async (): Promise<VentaArticulo[]>=>{
-        const response = await fetch(`${BASE_URL}/VentaArticulo/all`);
+        const response = await fetch(`${BASE_URL}/all`);
         const data = await response.json();
         return data;
     },
 
-    getVentaArticulo: async (id: number): Promise<VentaArticulo> => {
+    getVentaArticulo: async (id: number): Promise<VentaArticulo[]> => {
 
-        const response = await fetch(`${BASE_URL}/VentaArticulo/id/${id}`, {
-            method: "GET",
-            headers: {
-                'Accept': '*/*',
-                'Authorization': `Bearer ` + localStorage.getItem('token'),
-                'Content-Type': 'application/json'
-            },
-        });
+        const response = await fetch(`${BASE_URL}/id/${id}`);
         const data = await response.json();
         return data;
     },

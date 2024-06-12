@@ -13,7 +13,7 @@ import DetalleButton from '../DetalleButton.tsx/DetalleButton';
 
 function VentaTable() {
 
-  const[ventaID, setVentaID] = useState<Number>();
+  const[ventaID, setVentaID] = useState<Number>(0);
 
     const[ventas, setVentas] = useState<Venta[]>([]);
 
@@ -52,7 +52,7 @@ const[refreshData, setRefreshData] = useState (false);
   const [nombre, setNombre] = useState("");
   
   //Logica del modal
-  const handleClick = (newNombre: string, venta: Venta, modal: ModalType, ventaID?: number) => {
+  const handleClick = (newNombre: string, venta: Venta, modal: ModalType, ventaID: Number) => {
     setNombre(newNombre);
     setModalType(modal);
     setVenta(venta);
@@ -64,7 +64,7 @@ const[refreshData, setRefreshData] = useState (false);
   return (
     <>
     <div style={{display:'flex', justifyContent:'end'}}>      
-      <Button onClick={() => handleClick("Nuevo articulo", initializableNewVenta(),ModalType.CREATE)} style={{width:'150px', margin:'20px'}}>Añadir venta</Button>
+      <Button onClick={() => handleClick("Nuevo articulo", initializableNewVenta(),ModalType.CREATE, ventaID)} style={{width:'150px', margin:'20px'}}>Añadir venta</Button>
     </div>
       <div style={{display:'flex',justifyContent:'center', margin:'20px'}}>
       <Table style={{ width:'100%'}}>
@@ -85,7 +85,7 @@ const[refreshData, setRefreshData] = useState (false);
               <td>{venta.montoTotal}</td>
               <td>{venta.fechaVenta}</td>
               <td><DetalleButton onClick={()=> handleClick("Editar venta", venta, ModalType.UPDATE, venta.id)}></DetalleButton></td>
-              <td><DeleteButton onClick={()=> handleClick("Eliminar venta", venta, ModalType.DELETE)}></DeleteButton></td>
+              <td><DeleteButton onClick={()=> handleClick("Eliminar venta", venta, ModalType.DELETE, ventaID)}></DeleteButton></td>
           </tr>
         ))}
       </tbody>
@@ -100,7 +100,6 @@ const[refreshData, setRefreshData] = useState (false);
           modalType={modalType}
           venta={venta}
           refreshData={setRefreshData}
-          ventaID={ventaID||0}
           />
         )}
 
