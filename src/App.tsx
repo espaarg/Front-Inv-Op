@@ -10,7 +10,7 @@ function App() {
     <ToastContainer/>
     <Router>
       <Header/>
-         <div style={{marginBottom:'20px', minHeight:'850px'}}>
+         <div style={{marginBottom:'20px', minHeight:'785px'}}>
            <AppRoutes/>
          </div>
         

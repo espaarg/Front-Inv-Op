@@ -127,6 +127,7 @@ const DemandaHistoricaModal = ({ show, onHide, nombre, modalType, venta: articul
                                         ))}
                                     </select>
                                 </label>
+                                <div>
                                 <label style={{ marginTop: '20px', marginRight: '80px' }}>
                                     Selecciona la fecha de inicio:
                                     <DatePickerComponent selectedDate={selectedDateInicio} onDateChange={handleDateChangeInicio} />
@@ -135,6 +136,8 @@ const DemandaHistoricaModal = ({ show, onHide, nombre, modalType, venta: articul
                                     Selecciona la fecha de fin:
                                     <DatePickerComponent selectedDate={selectedDateFin} onDateChange={handleDateChangeFin} />
                                 </label>
+                                </div>
+                                
                                 <Modal.Footer className="mt-4">
                                     <Button variant="secondary" onClick={onHide}> Cancelar </Button>
                                     <Button variant="success" type="submit" onClick={() => handleSaveUpdate()} disabled={!isFormValid}> Guardar </Button>

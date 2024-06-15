@@ -6,5 +6,5 @@ export interface Articulo{
     stockDeSeguridad: number;
     loteOptimo: number;
     cgiArticulo:number;
-    fechaAlta: Date;
+    fechaAlta: string;
 }

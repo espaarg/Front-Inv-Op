@@ -41,7 +41,7 @@ const[refreshData, setRefreshData] = useState (false);
       stockDeSeguridad:0,
       loteOptimo:0,
       cgiArticulo:0,
-      fechaAlta: new Date('2024-06-07')
+      fechaAlta: "new Date('2024-06-07')"
     };
   
   };
@@ -76,6 +76,9 @@ const[refreshData, setRefreshData] = useState (false);
           <th>Nombre</th>
           <th>Precio</th>
           <th>Stock Actual</th>
+          <th>Stock De seguridad</th>
+          <th>Lote Optimo</th>
+          <th>CGI</th>
           <th>Editar</th>
           <th>Borrar</th>
         </tr>
@@ -87,6 +90,10 @@ const[refreshData, setRefreshData] = useState (false);
               <td>{articulo.nombre}</td>
               <td>{articulo.precioCompra}</td>
               <td>{articulo.stockActual}</td>
+              <td>{articulo.stockDeSeguridad}</td>
+              <td>{articulo.loteOptimo}</td>
+              <td>{articulo.cgiArticulo}</td>
+
               <td><EditButton onClick={()=> handleClick("Editar articulo", articulo, ModalType.UPDATE)}></EditButton></td>
               <td><DeleteButton onClick={()=> handleClick("Eliminar articulo", articulo, ModalType.DELETE)}></DeleteButton></td>
           </tr>

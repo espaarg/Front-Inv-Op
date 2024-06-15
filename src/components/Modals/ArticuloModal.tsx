@@ -56,9 +56,9 @@ const ArticuloModal = ({show, onHide, nombre, modalType,ventaArticulo: articulo,
             nombre: Yup.string().required('Nombre requerido'),
             precioCompra: Yup.number().min(0).required('Se requiere un precio'),
             stockActual: Yup.number().min(0).required('Se requiere ingresar el stock actual de ese producto'),
-            stockDeSeguridad: Yup.number().min(0),
-            loteOptimo: Yup.number().min(0),
-            cgiArticulo: Yup.number().min(0),
+            stockDeSeguridad: Yup.number().min(0).required('stockDeSeguridad requerido'),
+            loteOptimo: Yup.number().min(0).required('loteOptimo requerido'),
+            cgiArticulo: Yup.number().min(0).required('cgiArticulo requerido'),
         })
     }
 
@@ -69,7 +69,8 @@ const ArticuloModal = ({show, onHide, nombre, modalType,ventaArticulo: articulo,
         validationSchema: validationSchema(),
         validateOnChange: true,
         validateOnBlur: true,
-        onSubmit:(obj: Articulo) => handleSaveUpdate(obj),
+        onSubmit:(obj: Articulo) =>   handleSaveUpdate(obj)
+            
     });
 
     return (
@@ -98,6 +99,7 @@ const ArticuloModal = ({show, onHide, nombre, modalType,ventaArticulo: articulo,
             <Modal show= { show} onHide={onHide} centered backdrop= "static" className="modal- xl">
                 <Modal.Header style={{display:'flex', flexDirection:'column'}}>
                     <Modal.Title> {nombre} </Modal.Title>
+                    <p style={{color:'red'}}>***Completar todos los campos o no se creará***</p>
                        <Modal.Body>
                             <Form onSubmit={formik.handleSubmit}>
                                 <Form.Group controlId="formNombre">
@@ -117,15 +119,15 @@ const ArticuloModal = ({show, onHide, nombre, modalType,ventaArticulo: articulo,
                                 <Form.Group controlId="formPrecio">
                                     <Form.Label>Precio</Form.Label>
                                     <Form.Control
-                                        name="precio"
-                                        type="number"
+                                        name="precioCompra"
+                                        type="text"
                                         value={formik.values.precioCompra ||''}
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
-                                        isInvalid={Boolean(formik.errors.precioCompra&&formik.touched.precioCompra)}
+                                        isInvalid={Boolean( formik.errors.precioCompra&&formik.touched.precioCompra)}
                                     />
                                     <Form.Control.Feedback type="invalid">
-                                        {formik.errors.nombre}
+                                        {formik.errors.precioCompra}
                                     </Form.Control.Feedback >
                                 </Form.Group>
                                 <Form.Group controlId="formStockActual">
@@ -139,7 +141,7 @@ const ArticuloModal = ({show, onHide, nombre, modalType,ventaArticulo: articulo,
                                         isInvalid={Boolean(formik.errors.stockActual&&formik.touched.stockActual)}
                                     />
                                     <Form.Control.Feedback type="invalid">
-                                        {formik.errors.nombre}
+                                        {formik.errors.stockActual}
                                     </Form.Control.Feedback >
                                 </Form.Group>
                                 <Form.Group controlId="formStockDeSeguridad">
@@ -153,7 +155,7 @@ const ArticuloModal = ({show, onHide, nombre, modalType,ventaArticulo: articulo,
                                         isInvalid={Boolean(formik.errors.stockDeSeguridad&&formik.touched.stockDeSeguridad)}
                                     />
                                     <Form.Control.Feedback type="invalid">
-                                        {formik.errors.nombre}
+                                        {formik.errors.stockDeSeguridad}
                                     </Form.Control.Feedback >
                                 </Form.Group>
                                 <Form.Group controlId="formLoteOptimo">
@@ -167,7 +169,7 @@ const ArticuloModal = ({show, onHide, nombre, modalType,ventaArticulo: articulo,
                                         isInvalid={Boolean(formik.errors.loteOptimo && formik.touched.loteOptimo)}
                                     />
                                     <Form.Control.Feedback type="invalid">
-                                        {formik.errors.nombre}
+                                        {formik.errors.loteOptimo}
                                     </Form.Control.Feedback >
                                 </Form.Group>
                                 <Form.Group controlId="formCGIArticulo">
@@ -181,7 +183,7 @@ const ArticuloModal = ({show, onHide, nombre, modalType,ventaArticulo: articulo,
                                         isInvalid={Boolean(formik.errors.cgiArticulo&&formik.touched.cgiArticulo)}
                                     />
                                     <Form.Control.Feedback type="invalid">
-                                        {formik.errors.nombre}
+                                        {formik.errors.cgiArticulo}
                                     </Form.Control.Feedback >
                                 </Form.Group>
 

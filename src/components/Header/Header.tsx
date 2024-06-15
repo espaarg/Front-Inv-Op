@@ -6,7 +6,7 @@ const Header = () => {
 
     return (
 
-      <Navbar expand="lg"  style={{backgroundColor:'#ced4da'}}>
+      <Navbar expand="lg"  style={{backgroundColor:'#ced4da', padding:'20px'}}>
         <Container >
           <Navbar.Brand href="#home">LOGO</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
