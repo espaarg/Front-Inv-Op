@@ -6,7 +6,7 @@ import { ModalType } from '../../types/ModalType';
 import { Button } from 'react-bootstrap';
 import ArticuloModal from '../Modals/ArticuloModal';
 import EditButton from '../EditButton/EditButton';
-import DeleteButton from '../DeleteButton.tsx/DeleteButton';
+import DeleteButton from '../DeleteButton/DeleteButton';
 
 
 

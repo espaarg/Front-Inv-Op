@@ -4,5 +4,5 @@ export interface DemandaHistorica{
     fechaInicio: string;    
     fechaFin: string;
     nombreArticulo: string;
-
+    id_articulo: number
 }

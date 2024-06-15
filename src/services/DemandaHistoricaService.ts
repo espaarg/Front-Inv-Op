@@ -25,21 +25,28 @@ export const DemandaHistoricaService = {
         return data;
     },
 
-    createVenta:async (demandaHistorica: DemandaHistorica): Promise<DemandaHistorica> => {
-        const response = await fetch(`${BASE_URL}/DemandaHistorica`, {
-            method: "POST", 
+    createVenta: async (id_articulo: number, fechaInicio: string, fechaFin: string): Promise<DemandaHistorica> => {
+        const params = new URLSearchParams();
+        params.append("idArticulo", id_articulo.toString());
+        params.append("fechaDesde", fechaInicio);
+        params.append("fechaHasta", fechaFin);
+    
+        const response = await fetch(`${BASE_URL}/DemandaHistorica/create2`, {
+            method: "POST",
             headers: {
-                'Accept': '*/*',
-                'Authorization': `Bearer ` + localStorage.getItem('token'),
-                'Content-Type': 'application/json'
+                "Content-Type": "application/x-www-form-urlencoded"
             },
-            body: JSON.stringify(demandaHistorica)
+            body: params.toString()
         });
-
+    
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    
         const data = await response.json();
         return data;
-
     },
+    
 
     updateVenta: async (id: number, venta: DemandaHistorica): Promise<DemandaHistorica> => {
         const response = await fetch(`${BASE_URL}/DemandaHistorica/${id}`, {
@@ -56,13 +63,9 @@ export const DemandaHistoricaService = {
         return data;
     }, 
 
-    deleteVenta:async (id:number): Promise<void> => {
+    deleteVenta: async (id:number): Promise<void> => {
         await fetch (`${BASE_URL}/DemandaHistorica/${id}`,{
-            method: "DELETE",
-            headers: {
-                'Accept': '*/*',
-                'Authorization': `Bearer ` + localStorage.getItem('token'),
-            },
+            method: "DELETE"
         });
     }
 }

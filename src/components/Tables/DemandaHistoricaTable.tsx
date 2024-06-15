@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import { ModalType } from '../../types/ModalType';
 import { Button } from 'react-bootstrap';
-import DeleteButton from '../DeleteButton.tsx/DeleteButton';
+import DeleteButton from '../DeleteButton/DeleteButton';
 import { DemandaHistoricaService } from '../../services/DemandaHistoricaService';
 import { DemandaHistorica } from '../../types/DemandaHistorica';
 import DemandaHistoricaModal from '../Modals/DemandaHistoricaModal';
@@ -39,7 +39,8 @@ const[refreshData, setRefreshData] = useState (false);
         nombreArticulo:"",
         fechaInicio:"",
         fechaFin: "",
-        cantidadVendida:0
+        cantidadVendida:0,
+        id_articulo:0,
     };
   
   };

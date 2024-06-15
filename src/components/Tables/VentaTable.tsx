@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import { ModalType } from '../../types/ModalType';
 import { Button } from 'react-bootstrap';
-import DeleteButton from '../DeleteButton.tsx/DeleteButton';
+import DeleteButton from '../DeleteButton/DeleteButton';
 import VentaModal from '../Modals/VentaModal';
 import { VentaService } from '../../services/VentaService';
 import { Venta } from '../../types/Venta';
-import DetalleButton from '../DetalleButton.tsx/DetalleButton';
+import DetalleButton from '../DetalleButton/DetalleButton';
 
 
 
