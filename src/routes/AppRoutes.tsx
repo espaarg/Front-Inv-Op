@@ -3,6 +3,7 @@ import HomePage from '../pages/HomePage';
 import Articulos from '../pages/Articulos';
 import React from 'react';
 import Ventas from '../pages/Ventas';
+import DemandasHistoricas from '../pages/DemandasHistoricas';
 
 
 
@@ -12,6 +13,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/" element={<HomePage/>}/>
           {<Route path="/articulos" element={<Articulos/>}/>}
           {<Route path="/ventas" element={<Ventas/>}/>}
+          {<Route path="/demandasHistoricas" element={<DemandasHistoricas/>}/>}
     
     </Routes>
   )

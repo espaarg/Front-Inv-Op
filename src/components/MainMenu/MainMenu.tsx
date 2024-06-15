@@ -14,10 +14,10 @@ return(
                 <div>
                     <div > <Button className="btnP" variant="primary" onClick={() => navigate('/ventas')}>      Ventas        </Button></div>
                     <div > <Button className="btnP"variant="primary" onClick={() => navigate('/articulos')}>     Artículos      </Button></div>
-                    <div > <Button className="btnP" variant="primary">  Predecir Demanda  </Button></div>
+                    <div > <Button className="btnP" variant="primary" >  Predecir Demanda  </Button></div>
                 </div>
                 <div>
-                    <div > <Button className="btnP" variant="primary"> Demanda Historica  </Button></div>
+                    <div > <Button className="btnP" variant="primary" onClick={() => navigate('/demandasHistoricas')}> Demanda Historica  </Button></div>
                     <div > <Button className="btnP" variant="primary"> Ordenes de compra  </Button></div>
                     <div > <Button className="btnP" variant="primary">Configurar Parámtros</Button></div>
                 </div>

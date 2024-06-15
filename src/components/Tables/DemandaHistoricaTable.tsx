@@ -3,19 +3,18 @@ import Table from 'react-bootstrap/Table';
 import { ModalType } from '../../types/ModalType';
 import { Button } from 'react-bootstrap';
 import DeleteButton from '../DeleteButton.tsx/DeleteButton';
-import VentaModal from '../Modals/VentaModal';
-import { VentaService } from '../../services/VentaService';
-import { Venta } from '../../types/Venta';
-import DetalleButton from '../DetalleButton.tsx/DetalleButton';
+import { DemandaHistoricaService } from '../../services/DemandaHistoricaService';
+import { DemandaHistorica } from '../../types/DemandaHistorica';
+import DemandaHistoricaModal from '../Modals/DemandaHistoricaModal';
 
 
 
 
-function VentaTable() {
+function DemandaHistoricaTable() {
 
   const[ventaID, setVentaID] = useState<Number>(0);
 
-    const[ventas, setVentas] = useState<Venta[]>([]);
+    const[ventas, setVentas] = useState<DemandaHistorica[]>([]);
 
         //Actualiza la tabla cada vez que se produce un cambio
 const[refreshData, setRefreshData] = useState (false);
@@ -23,7 +22,7 @@ const[refreshData, setRefreshData] = useState (false);
 //Se ejecuta cada vez que se renderiza el componente o refreshData cambia de estado
     useEffect(()=> {
       const fetchVentas = async ()=> {
-        const ventas = await VentaService.getVentas();
+        const ventas = await DemandaHistoricaService.getDemandaHistorica();
         setVentas(ventas);
   
       };
@@ -33,18 +32,20 @@ const[refreshData, setRefreshData] = useState (false);
 
   console.log(JSON.stringify(ventas,null,2));
 
-  const initializableNewVenta = (): Venta => {
+  const initializableNewVenta = (): DemandaHistorica => {
 
     return {
-      id:0,
-      montoTotal:0,
-      fechaVenta: ""
+        id:0,
+        nombreArticulo:"",
+        fechaInicio:"",
+        fechaFin: "",
+        cantidadVendida:0
     };
   
   };
   
   //articulo seleccionado que se va a pasar como prop al Modal
-  const [venta, setVenta] = useState<Venta>(initializableNewVenta);
+  const [venta, setVenta] = useState<DemandaHistorica>(initializableNewVenta);
   
   //const para manejar el estado del modal
   const [showModal, setShowModal] = useState(false);
@@ -52,7 +53,7 @@ const[refreshData, setRefreshData] = useState (false);
   const [nombre, setNombre] = useState("");
   
   //Logica del modal
-  const handleClick = (newNombre: string, venta: Venta, modal: ModalType, ventaID: Number) => {
+  const handleClick = (newNombre: string, venta: DemandaHistorica, modal: ModalType, ventaID: Number) => {
     setNombre(newNombre);
     setModalType(modal);
     setVenta(venta);
@@ -71,9 +72,10 @@ const[refreshData, setRefreshData] = useState (false);
       <thead>
         <tr>
           <th>Id</th>
-          <th>Codigo</th>
-          <th>Monto Total</th>
-          <th>Ver Detalle</th>
+          <th>Articulo</th>
+          <th>Fecha Inicio Periodo</th>
+          <th>Fecha Fin Periodo</th>
+          <th>Cantidad demandada</th>
           <th>Borrar</th>
         </tr>
       </thead>
@@ -81,9 +83,10 @@ const[refreshData, setRefreshData] = useState (false);
         {ventas.map(venta=> (
           <tr key = {venta.id}>
               <td>{venta.id}</td>
-              <td>{venta.montoTotal}</td>
-              <td>{venta.fechaVenta}</td>
-              <td><DetalleButton onClick={()=> handleClick("Editar venta", venta, ModalType.UPDATE, venta.id)}></DetalleButton></td>
+              <td>{venta.nombreArticulo}</td>
+              <td>{venta.fechaInicio}</td>
+              <td>{venta.fechaFin}</td>
+              <td>{venta.cantidadVendida}</td>
               <td><DeleteButton onClick={()=> handleClick("Eliminar venta", venta, ModalType.DELETE, ventaID)}></DeleteButton></td>
           </tr>
         ))}
@@ -91,8 +94,8 @@ const[refreshData, setRefreshData] = useState (false);
     </Table>
     </div>
 
-        {showModal&&(
-          <VentaModal
+    {showModal&&(
+          <DemandaHistoricaModal
           show={showModal}
           onHide={()=>setShowModal(false)}
           nombre={nombre}
@@ -106,4 +109,4 @@ const[refreshData, setRefreshData] = useState (false);
   );
 }
 
-export default VentaTable;
+export default DemandaHistoricaTable;
