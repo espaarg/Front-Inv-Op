@@ -18,9 +18,10 @@ return(
                 </div>
                 <div>
                     <div > <Button className="btnP" variant="primary" onClick={() => navigate('/demandasHistoricas')}> Demanda Historica  </Button></div>
-                    <div > <Button className="btnP" variant="primary"> Ordenes de compra  </Button></div>
-                    <div > <Button className="btnP" variant="primary">Configurar Parámtros</Button></div>
+                    <div > <Button className="btnP" variant="primary" onClick={() => navigate('/ordenesDeCompra')}> Ordenes de compra  </Button></div>
+                    <div > <Button className="btnP" variant="primary" onClick={() => navigate('/proveedores')}> Proveedores  </Button></div>
                 </div>
+                <div > <Button className="btnP" variant="primary">Configurar Parámtros</Button></div>
             </div>
         </div>
     </div>

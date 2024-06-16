@@ -1,12 +1,12 @@
 .cuadroGris{
     background-color:#ced4da;
-    ;
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: auto;
     padding: 20px;
     margin-top: 10%;
     border-radius: 20px;
+    
 }
 
 .papa{

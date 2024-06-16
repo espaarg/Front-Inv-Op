@@ -82,7 +82,7 @@ const ArticuloModal = ({show, onHide, nombre, modalType,ventaArticulo: articulo,
                     <Modal.Title>{nombre}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p>¿Está seguro de eliminar el articulo?
+                    <p>¿Está seguro de eliminar el articulo 
                     <strong>{articulo.nombre}</strong>? <br />
                     </p>
                 </Modal.Body>
