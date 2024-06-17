@@ -27,7 +27,7 @@ export const ArticuloService = {
     },
 
     createVenta:async (articulo: Articulo): Promise<Articulo> => {
-        const response = await fetch(`${BASE_URL}/Articulo`, {
+        const response = await fetch(`${BASE_URL}/Articulo/create`, {
             method: "POST", 
             headers: {
                 'Accept': '*/*',

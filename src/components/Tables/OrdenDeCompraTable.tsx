@@ -64,7 +64,7 @@ const[refreshData, setRefreshData] = useState (false);
   return (
     <>
     <div style={{display:'flex', justifyContent:'end'}}>      
-      <Button onClick={() => handleClick("Nuevo articulo", initializableNewArticulo(),ModalType.CREATE)} style={{width:'150px', margin:'20px'}}>Añadir articulo</Button>
+      <Button onClick={() => handleClick("Nuevo articulo", initializableNewArticulo(),ModalType.CREATE)} style={{width:'150px', margin:'20px'}}>Generar orden de compra</Button>
     </div>
       <div style={{display:'flex',justifyContent:'center', margin:'20px'}}>
       <Table style={{ width:'100%'}}>

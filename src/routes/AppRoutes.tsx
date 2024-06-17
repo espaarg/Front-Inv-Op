@@ -6,6 +6,8 @@ import Ventas from '../pages/Ventas';
 import DemandasHistoricas from '../pages/DemandasHistoricas';
 import Proveedores from '../pages/Proveedores';
 import OrdenesDeCompra from '../pages/OrdenesDeCompra';
+import MCA from '../pages/MCApage';
+import ConfigParams from '../pages/ConfigParams';
 
 
 
@@ -18,6 +20,8 @@ const AppRoutes: React.FC = () => {
           {<Route path="/demandasHistoricas" element={<DemandasHistoricas/>}/>}
           {<Route path="/proveedores" element={<Proveedores/>}/>}
           {<Route path="/ordenesDeCompra" element={<OrdenesDeCompra/>}/>}
+          {<Route path="/mCA" element={<MCA/>}/>}
+          {<Route path="/configParams" element={<ConfigParams/>}/>}
 
     </Routes>
   )

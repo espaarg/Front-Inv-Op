@@ -21,7 +21,7 @@ return(
                     <div > <Button className="btnP" variant="primary" onClick={() => navigate('/ordenesDeCompra')}>Ordenes de compra</Button></div>
                     <div > <Button className="btnP" variant="primary" onClick={() => navigate('/proveedores')}>Proveedores</Button></div>
                 </div>
-                <div > <Button className="btnP" variant="primary">Configurar Parámetros</Button></div>
+                <div > <Button className="btnP" variant="primary" onClick={() => navigate('/configParams')}>Configurar Parámetros</Button></div>
             </div>
         </div>
     </div>
