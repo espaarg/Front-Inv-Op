@@ -12,16 +12,16 @@ return(
           <h1>Menú</h1> 
             <div className="primerDiv">
                 <div>
-                    <div > <Button className="btnP" variant="primary" onClick={() => navigate('/ventas')}>      Ventas        </Button></div>
-                    <div > <Button className="btnP"variant="primary" onClick={() => navigate('/articulos')}>     Artículos      </Button></div>
+                    <div > <Button className="btnP" variant="primary" onClick={() => navigate('/ventas')}>Ventas</Button></div>
+                    <div > <Button className="btnP"variant="primary" onClick={() => navigate('/articulos')}>Artículos</Button></div>
                     <div > <Button className="btnP" variant="primary" >  Predecir Demanda  </Button></div>
                 </div>
                 <div>
-                    <div > <Button className="btnP" variant="primary" onClick={() => navigate('/demandasHistoricas')}> Demanda Historica  </Button></div>
-                    <div > <Button className="btnP" variant="primary" onClick={() => navigate('/ordenesDeCompra')}> Ordenes de compra  </Button></div>
-                    <div > <Button className="btnP" variant="primary" onClick={() => navigate('/proveedores')}> Proveedores  </Button></div>
+                    <div > <Button className="btnP" variant="primary" onClick={() => navigate('/demandasHistoricas')}>Demanda Historica</Button></div>
+                    <div > <Button className="btnP" variant="primary" onClick={() => navigate('/ordenesDeCompra')}>Ordenes de compra</Button></div>
+                    <div > <Button className="btnP" variant="primary" onClick={() => navigate('/proveedores')}>Proveedores</Button></div>
                 </div>
-                <div > <Button className="btnP" variant="primary">Configurar Parámtros</Button></div>
+                <div > <Button className="btnP" variant="primary">Configurar Parámetros</Button></div>
             </div>
         </div>
     </div>
