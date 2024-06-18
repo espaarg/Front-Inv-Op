@@ -1,35 +1,66 @@
-import { Button } from "react-bootstrap"
+import { Button, Card, Container, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-const ConfigParams = ( ) => {
+const ConfigParams = () => {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const goToMultiplicadorCa = () => {
+    navigate("/mCA");
+  };
 
-return(
-    <div style={{display:'flex', flexDirection:'column'}}>
-        <div style={{display:'flex', flexDirection:'row'}}>
-                    <Button variant="dark" style={{margin:'10px', width:'170px', height:'50px', padding:'5px'}} onClick={() => navigate('/')}>Volver al menú</Button>
-                    <h1 style={{paddingLeft:'100px',marginTop:'30px'}}>Configuracion de parametros</h1>
-        </div>
-        <div style={{width:'100%', display:'flex', flexDirection:'row', justifyContent:'center'}}>
-        <div style={{width:'auto', backgroundColor:'#ced4da', maxWidth:'800px', marginTop:'80px', borderRadius:'5px', padding:'20px'}}>
-            <div className="primerDiv">
-                <div>
-                    <div > <Button className="btnP" variant="primary" onClick={() => navigate('/mCA')}>Multiplicador de Ca</Button></div>
-                    <div > <Button className="btnP" variant="primary" >  X  </Button></div>
-                </div>
-                <div>
-                    
-                </div>
-                <div > </div>
-            </div>
-        </div>
-        </div>
-        
+  return (
+    <div style={{ backgroundColor: "#f0f0f0", minHeight: "100vh", padding: "20px" }}>
+      <Container>
+        <Row className="align-items-center mb-4">
+          <Col xs={12} md={6}>
+            <Button
+              variant="dark"
+              style={{ width: "170px", height: "50px", padding: "5px" }}
+              onClick={() => navigate("/")}
+            >
+              Volver al menú
+            </Button>
+          </Col>
+          <Col xs={12} md={6}>
+            <h1 style={{ marginTop: "30px" }}>Configuración de parámetros</h1>
+          </Col>
+        </Row>
+        <Row className="justify-content-center">
+          <Col xs={12} md={8}>
+            <Card
+              style={{
+                backgroundColor: "#ced4da",
+                borderRadius: "10px",
+                padding: "20px",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <Card.Body>
+                <Card.Title className="text-center mb-4">Opciones de configuración</Card.Title>
+                <Row className="justify-content-center mb-4">
+                  <Col xs={6} md={4}>
+                    <Button
+                      className="w-100"
+                      variant="primary"
+                      onClick={goToMultiplicadorCa}
+                    >
+                      Multiplicador de Ca
+                    </Button>
+                  </Col>
+                  <Col xs={6} md={4}>
+                    <Button className="w-100" variant="primary">
+                      Otra opción
+                    </Button>
+                  </Col>
+                </Row>
+                {/* Más opciones de configuración */}
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
     </div>
-    
-)
+  );
+};
 
-}
-
-export default ConfigParams
+export default ConfigParams;

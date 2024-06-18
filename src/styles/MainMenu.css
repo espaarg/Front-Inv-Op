@@ -1,27 +1,46 @@
-.cuadroGris{
-    background-color:#ced4da;
-    display: flex;
-    flex-direction: column;
-    width: auto;
-    padding: 20px;
-    margin-top: 10%;
-    border-radius: 20px;
-    
-}
-
-.papa{
+.menu-container {
     display: flex;
     justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f8f9fa;
 }
 
-.primerDiv{
+.menu-box {
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+}
+
+.menu-box h1 {
+    margin-bottom: 30px;
+    color: #343a40;
+    font-weight: 700;
+}
+
+.menu-grid {
     display: flex;
-    justify-content:space-around;
-    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
 }
 
-.btnP{
-    margin: 5px;
-    width: 200px!important;
+.menu-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
+.menu-button {
+    margin: 10px;
+    width: 200px;
+    transition: all 0.3s ease;
+}
+
+.menu-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}

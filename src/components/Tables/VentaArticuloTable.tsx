@@ -60,7 +60,7 @@ const[refreshData, setRefreshData] = useState (false);
     <div style={{display:'flex', justifyContent:'end'}}>      
     </div>
       <div style={{display:'flex',justifyContent:'center', margin:'20px'}}>
-      <Table style={{ width:'100%'}}>
+      <Table striped bordered hover style={{ width: '100%', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
       <thead>
         <tr>
           <th>Id</th>

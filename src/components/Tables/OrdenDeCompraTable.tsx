@@ -8,109 +8,107 @@ import { OrdenDeCompra } from '../../types/OrdenDeCompra';
 import { OrdenDeCompraService } from '../../services/OrdenDeCompraService';
 import OrdenDeCompraModal from '../Modals/OrdenDeCompraModal';
 
-
-
-
 function OrdenDeCompraTable() {
+    const [ordenesDeCompra, setOrdenesDeCompra] = useState<OrdenDeCompra[]>([]);
+    const [refreshData, setRefreshData] = useState(false);
 
-    const[articulos, setArticulos] = useState<OrdenDeCompra[]>([]);
+    useEffect(() => {
+        const fetchOrdenesDeCompra = async () => {
+            const ordenesDeCompra = await OrdenDeCompraService.getVentas();
+            setOrdenesDeCompra(ordenesDeCompra);
+        };
+        fetchOrdenesDeCompra();
+    }, [refreshData]);
 
-    //Actualiza la tabla cada vez que se produce un cambio
-const[refreshData, setRefreshData] = useState (false);
+    const initializableNewOrdenDeCompra = (): OrdenDeCompra => ({
+        id: 0,
+        totalCompra: 0,
+        totalArticulos: 0,
+        fechaPedido: '',
+        estadoOrdenDeCompra: '',
+        proveedorArticulo: '',
+    });
 
-//Se ejecuta cada vez que se renderiza el componente o refreshData cambia de estado
-    useEffect(()=> {
-      const fetchArticulos = async ()=> {
-        const articulos = await OrdenDeCompraService.getVentas();
-        setArticulos(articulos);
-  
-      };
-      fetchArticulos();
-    }, [refreshData]
-  );
+    const [ordenDeCompra, setOrdenDeCompra] = useState<OrdenDeCompra>(initializableNewOrdenDeCompra);
+    const [showModal, setShowModal] = useState(false);
+    const [modalType, setModalType] = useState<ModalType>(ModalType.NONE);
+    const [nombre, setNombre] = useState('');
 
-  console.log(JSON.stringify(articulos,null,2));
-
-  const initializableNewArticulo = (): OrdenDeCompra => {
-
-    return {
-      id:0,
-      totalCompra:0,
-      totalArticulos:0,
-      fechaPedido:"",
-      estadoOrdenDeCompra:"",
-      proveedorArticulo:"",
+    const handleClick = (newNombre: string, ordenDeCompra: OrdenDeCompra, modal: ModalType) => {
+        setNombre(newNombre);
+        setModalType(modal);
+        setOrdenDeCompra(ordenDeCompra);
+        setShowModal(true);
     };
-  
-  };
-  
-  //articulo seleccionado que se va a pasar como prop al Modal
-  const [articulo, setArticulo] = useState<OrdenDeCompra>(initializableNewArticulo);
-  
-  //const para manejar el estado del modal
-  const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState<ModalType>(ModalType.NONE);
-  const [nombre, setNombre] = useState("");
-  
-  //Logica del modal
-  const handleClick = (newNombre: string, articulo: OrdenDeCompra, modal: ModalType ) => {
-    setNombre(newNombre);
-    setModalType(modal);
-    setArticulo(articulo);
-    setShowModal(true);
-  }
-  
 
-  return (
-    <>
-    <div style={{display:'flex', justifyContent:'end'}}>      
-      <Button onClick={() => handleClick("Nuevo articulo", initializableNewArticulo(),ModalType.CREATE)} style={{width:'150px', margin:'20px'}}>Generar orden de compra</Button>
-    </div>
-      <div style={{display:'flex',justifyContent:'center', margin:'20px'}}>
-      <Table style={{ width:'100%'}}>
-      <thead>
-        <tr>
-          <th>Id</th>
-          <th>Monto Total</th>
-          <th>Cantidad de articulos</th>
-          <th>Fecha de pedido</th>
-          <th>Estado</th>
-          <th>Proveedor</th>
-          <th>Editar</th>
-          <th>Borrar</th>
-        </tr>
-      </thead>
-      <tbody>
-        {articulos.map(articulo=> (
-          <tr key = {articulo.id}>
-              <td>{articulo.id}</td>
-              <td>{articulo.totalCompra}</td>
-              <td>{articulo.totalArticulos}</td>
-              <td>{articulo.fechaPedido}</td>
-              <td>{articulo.estadoOrdenDeCompra}</td>
-              <td>{articulo.proveedorArticulo}</td>
+    return (
+        <>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '20px 0' }}>
+                <Button
+                    onClick={() => handleClick('Nueva orden de compra', initializableNewOrdenDeCompra(), ModalType.CREATE)}
+                    style={{
+                        width: '200px',
+                        backgroundColor: '#28a745',
+                        borderColor: '#28a745',
+                        color: '#fff',
+                        fontWeight: 'bold',
+                        borderRadius: '5px',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                        transition: 'background-color 0.3s ease, transform 0.3s ease',
+                    }}
+                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#218838')}
+                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#28a745')}
+                >
+                    Generar orden de compra
+                </Button>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
+                <Table striped bordered hover style={{ width: '100%', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+                    <thead style={{ backgroundColor: '#f8f9fa' }}>
+                        <tr>
+                            <th>Id</th>
+                            <th>Monto Total</th>
+                            <th>Cantidad de Artículos</th>
+                            <th>Fecha de Pedido</th>
+                            <th>Estado</th>
+                            <th>Proveedor</th>
+                            <th>Editar</th>
+                            <th>Borrar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {ordenesDeCompra.map((ordenDeCompra) => (
+                            <tr key={ordenDeCompra.id} style={{ textAlign: 'center' }}>
+                                <td>{ordenDeCompra.id}</td>
+                                <td>{ordenDeCompra.totalCompra}</td>
+                                <td>{ordenDeCompra.totalArticulos}</td>
+                                <td>{ordenDeCompra.fechaPedido}</td>
+                                <td>{ordenDeCompra.estadoOrdenDeCompra}</td>
+                                <td>{ordenDeCompra.proveedorArticulo}</td>
+                                <td>
+                                    <EditButton onClick={() => handleClick('Editar orden de compra', ordenDeCompra, ModalType.UPDATE)} />
+                                </td>
+                                <td>
+                                    <DeleteButton onClick={() => handleClick('Eliminar orden de compra', ordenDeCompra, ModalType.DELETE)} />
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+            </div>
 
-              <td><EditButton onClick={()=> handleClick("Editar articulo", articulo, ModalType.UPDATE)}></EditButton></td>
-              <td><DeleteButton onClick={()=> handleClick("Eliminar articulo", articulo, ModalType.DELETE)}></DeleteButton></td>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
-    </div>
-
-        {showModal&&(
-          <OrdenDeCompraModal
-          show={showModal}
-          onHide={()=>setShowModal(false)}
-          nombre={nombre}
-          modalType={modalType}
-          ventaArticulo={articulo}
-          refreshData={setRefreshData}
-          />
-        )}
-
-    </>
-  );
+            {showModal && (
+                <OrdenDeCompraModal
+                    show={showModal}
+                    onHide={() => setShowModal(false)}
+                    nombre={nombre}
+                    modalType={modalType}
+                    ventaArticulo={ordenDeCompra}
+                    refreshData={setRefreshData}
+                />
+            )}
+        </>
+    );
 }
 
 export default OrdenDeCompraTable;

@@ -8,102 +8,99 @@ import { VentaService } from '../../services/VentaService';
 import { Venta } from '../../types/Venta';
 import DetalleButton from '../DetalleButton/DetalleButton';
 
-
-
-
 function VentaTable() {
 
-  const[ventaID, setVentaID] = useState<Number>(0);
+    const [ventas, setVentas] = useState<Venta[]>([]);
+    const [refreshData, setRefreshData] = useState(false);
 
-    const[ventas, setVentas] = useState<Venta[]>([]);
+    useEffect(() => {
+        const fetchVentas = async () => {
+            const ventas = await VentaService.getVentas();
+            setVentas(ventas);
+        };
+        fetchVentas();
+    }, [refreshData]);
 
-        //Actualiza la tabla cada vez que se produce un cambio
-const[refreshData, setRefreshData] = useState (false);
+    const initializableNewVenta = (): Venta => ({
+        id: 0,
+        montoTotal: 0,
+        fechaVenta: '',
+    });
 
-//Se ejecuta cada vez que se renderiza el componente o refreshData cambia de estado
-    useEffect(()=> {
-      const fetchVentas = async ()=> {
-        const ventas = await VentaService.getVentas();
-        setVentas(ventas);
-  
-      };
-      fetchVentas();
-    }, [refreshData]
-  );
+    const [venta, setVenta] = useState<Venta>(initializableNewVenta);
+    const [showModal, setShowModal] = useState(false);
+    const [modalType, setModalType] = useState<ModalType>(ModalType.NONE);
+    const [nombre, setNombre] = useState('');
 
-  console.log(JSON.stringify(ventas,null,2));
-
-  const initializableNewVenta = (): Venta => {
-
-    return {
-      id:0,
-      montoTotal:0,
-      fechaVenta: ""
+    const handleClick = (newNombre: string, venta: Venta, modal: ModalType) => {
+        setNombre(newNombre);
+        setModalType(modal);
+        setVenta(venta);
+        setShowModal(true);
     };
-  
-  };
-  
-  //articulo seleccionado que se va a pasar como prop al Modal
-  const [venta, setVenta] = useState<Venta>(initializableNewVenta);
-  
-  //const para manejar el estado del modal
-  const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState<ModalType>(ModalType.NONE);
-  const [nombre, setNombre] = useState("");
-  
-  //Logica del modal
-  const handleClick = (newNombre: string, venta: Venta, modal: ModalType, ventaID: Number) => {
-    setNombre(newNombre);
-    setModalType(modal);
-    setVenta(venta);
-    setShowModal(true);
-    setVentaID(ventaID);
-  }
-  
 
-  return (
-    <>
-    <div style={{display:'flex', justifyContent:'end'}}>      
-      <Button onClick={() => handleClick("Nuevo articulo", initializableNewVenta(),ModalType.CREATE, ventaID)} style={{width:'150px', margin:'20px'}}>Añadir venta</Button>
-    </div>
-      <div style={{display:'flex',justifyContent:'center', margin:'20px'}}>
-      <Table style={{ width:'100%'}}>
-      <thead>
-        <tr>
-          <th>Id</th>
-          <th>Codigo</th>
-          <th>Monto Total</th>
-          <th>Ver Detalle</th>
-          <th>Borrar</th>
-        </tr>
-      </thead>
-      <tbody>
-        {ventas.map(venta=> (
-          <tr key = {venta.id}>
-              <td>{venta.id}</td>
-              <td>{venta.montoTotal}</td>
-              <td>{venta.fechaVenta}</td>
-              <td><DetalleButton onClick={()=> handleClick("Editar venta", venta, ModalType.UPDATE, venta.id)}></DetalleButton></td>
-              <td><DeleteButton onClick={()=> handleClick("Eliminar venta", venta, ModalType.DELETE, ventaID)}></DeleteButton></td>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
-    </div>
+    return (
+        <>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '20px 0' }}>
+                <Button
+                    onClick={() => handleClick('Nueva venta', initializableNewVenta(), ModalType.CREATE)}
+                    style={{
+                        width: '150px',
+                        backgroundColor: '#007bff',
+                        borderColor: '#007bff',
+                        color: '#fff',
+                        fontWeight: 'bold',
+                        borderRadius: '5px',
+                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                        transition: 'background-color 0.3s ease, transform 0.3s ease',
+                    }}
+                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#0056b3')}
+                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
+                >
+                    Añadir venta
+                </Button>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
+                <Table striped bordered hover style={{ width: '100%', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+                    <thead style={{ backgroundColor: '#f8f9fa' }}>
+                        <tr>
+                            <th>Id</th>
+                            <th>Monto Total</th>
+                            <th>Fecha de Venta</th>
+                            <th>Ver Detalle</th>
+                            <th>Borrar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {ventas.map((venta) => (
+                            <tr key={venta.id} style={{ textAlign: 'center' }}>
+                                <td>{venta.id}</td>
+                                <td>{venta.montoTotal}</td>
+                                <td>{venta.fechaVenta}</td>
+                                <td>
+                                    <DetalleButton onClick={() => handleClick('Ver detalle de venta', venta, ModalType.DETAIL)} />
+                                </td>
+                                <td>
+                                    <DeleteButton onClick={() => handleClick('Eliminar venta', venta, ModalType.DELETE)} />
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+            </div>
 
-        {showModal&&(
-          <VentaModal
-          show={showModal}
-          onHide={()=>setShowModal(false)}
-          nombre={nombre}
-          modalType={modalType}
-          venta={venta}
-          refreshData={setRefreshData}
-          />
-        )}
-
-    </>
-  );
+            {showModal && (
+                <VentaModal
+                    show={showModal}
+                    onHide={() => setShowModal(false)}
+                    nombre={nombre}
+                    modalType={modalType}
+                    venta={venta}
+                    refreshData={setRefreshData}
+                />
+            )}
+        </>
+    );
 }
 
 export default VentaTable;

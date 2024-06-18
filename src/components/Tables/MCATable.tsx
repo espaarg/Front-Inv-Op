@@ -1,95 +1,74 @@
-import { useEffect, useState } from 'react';
-import Table from 'react-bootstrap/Table';
+import { useState, useEffect } from 'react';
+import { Card, Button } from 'react-bootstrap';
 import { ModalType } from '../../types/ModalType';
-import EditButton from '../EditButton/EditButton';
 import { MCA } from '../../types/MCA';
 import { MCAService } from '../../services/MCAService';
 import MCAModal from '../Modals/MCAModal';
 
+const MCATable = () => {
+    const [mcas, setMCAs] = useState<MCA[]>([]);
+    const [refreshData, setRefreshData] = useState<boolean>(false);
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const [modalType, setModalType] = useState<ModalType>(ModalType.NONE);
+    const [selectedMCA, setSelectedMCA] = useState<MCA | null>(null);
 
-function MCATable() {
+    useEffect(() => {
+        const fetchMCAs = async () => {
+            try {
+                const mcasData = await MCAService.getVentas();
+                setMCAs(mcasData);
+            } catch (error) {
+                console.error('Error fetching MCAs:', error);
+            }
+        };
+        fetchMCAs();
+    }, [refreshData]);
 
-    const[mcas, setArticulos] = useState<MCA[]>([]);
-
-    //Actualiza la tabla cada vez que se produce un cambio
-const[refreshData, setRefreshData] = useState (false);
-
-//Se ejecuta cada vez que se renderiza el componente o refreshData cambia de estado
-    useEffect(()=> {
-      const fetchArticulos = async ()=> {
-        const mcas = await MCAService.getVentas();
-        setArticulos(mcas);
-  
-      };
-      fetchArticulos();
-    }, [refreshData]
-  );
-
-  console.log(JSON.stringify(mcas,null,2));
-
-  const initializableNewArticulo = (): MCA => {
-
-    return {
-      id:0,
-      valor:0,
+    const handleEditClick = (mca: MCA) => {
+        setSelectedMCA(mca);
+        setModalType(ModalType.UPDATE);
+        setShowModal(true);
     };
-  
-  };
-  
-  //articulo seleccionado que se va a pasar como prop al Modal
-  const [mca, setArticulo] = useState<MCA>(initializableNewArticulo);
-  
-  //const para manejar el estado del modal
-  const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState<ModalType>(ModalType.NONE);
-  const [nombre, setNombre] = useState("");
-  
-  //Logica del modal
-  const handleClick = (newNombre: string, mca: MCA, modal: ModalType ) => {
-    setNombre(newNombre);
-    setModalType(modal);
-    setArticulo(mca);
-    setShowModal(true);
-  }
-  
 
-  return (
-    <>
-        <div style={{display:'flex',justifyContent:'center'}}>
-        <div style={{margin:'20px', maxWidth:'700px', minWidth:'100px'}}>
-      <Table style={{ minWidth:'100px',width:'100%', }}>
-      <thead>
-        <tr>
-          <th>Valor</th>
-          <th>Editar</th>
-        </tr>
-      </thead>
-      <tbody>
-        {mcas.map(mca=> (
-          <tr key = {mca.id}>
-              <td>{mca.valor}</td>
-              <td><EditButton onClick={()=> handleClick("Editar articulo", mca, ModalType.UPDATE)}></EditButton></td>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
-    </div>
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedMCA(null);
+        setRefreshData(prev => !prev); // Refresh data after modal closes
+    };
+
+    return (
+        <div className="container mt-5">
+            <div className="row row-cols-1 row-cols-md-12 g-12">
+                {mcas.map(mca => (
+                    <div key={mca.id} className="col mb-4 d-flex justify-content-center">
+                        <Card style={{ width: '18rem' }}>
+                            <Card.Body className="text-center">
+                                <Card.Title style={{ fontSize: '1.5rem' }}>Valor: {mca.valor}</Card.Title>
+                                <Button
+                                    variant="primary"
+                                    style={{ width: '100%' }}
+                                    onClick={() => handleEditClick(mca)}
+                                >
+                                    Editar
+                                </Button>
+                            </Card.Body>
+                        </Card>
+                    </div>
+                ))}
+            </div>
+
+            {showModal && selectedMCA && (
+                <MCAModal
+                    show={showModal}
+                    onHide={handleCloseModal}
+                    modalType={modalType}
+                    ventaArticulo={selectedMCA}
+                    refreshData={setRefreshData}
+                    nombre=""
+                />
+            )}
         </div>
-      
-        {showModal&&(
-          <MCAModal
-          show={showModal}
-          onHide={()=>setShowModal(false)}
-          nombre={nombre}
-          modalType={modalType}
-          ventaArticulo={mca}
-          refreshData={setRefreshData}
-          />
-        )}
-
-
-    </>
-  );
-}
+    );
+};
 
 export default MCATable;
