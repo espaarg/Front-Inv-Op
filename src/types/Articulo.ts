@@ -6,5 +6,11 @@ export interface Articulo{
     stockDeSeguridad: number;
     loteOptimo: number;
     cgiArticulo:number;
-    fechaAlta: string;
+    puntoPedido:number;
+    costoAlmacenamiento: number;
+    tiempoEntrePedidos: number;
+    cantMax: number;
+    cantAPedir: number;
+    modeloInventario: string;
+    proveedorArticulo: string;
 }

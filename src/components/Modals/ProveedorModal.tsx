@@ -54,7 +54,8 @@ const ProveedorModal = ({show, onHide, nombre, modalType,ventaArticulo: proveedo
         return Yup.object().shape({
             id: Yup.number().integer().min(0),
             nombreProveedor: Yup.string().required('Nombre requerido'),
-            diasDemora: Yup.number().min(0).required('Se requiere un precio'),
+            diasDemora: Yup.number().min(0).required('Se requiere un valor'),
+            costoPedido: Yup.number().min(0).required('Se requiere un precio')
             
         })
     }
@@ -79,7 +80,7 @@ const ProveedorModal = ({show, onHide, nombre, modalType,ventaArticulo: proveedo
                     <Modal.Title>{nombre}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p>¿Está seguro de eliminar el Proveedor 
+                    <p>¿Está seguro de eliminar el Proveedor  
                     <strong>{proveedor.nombreProveedor}</strong>? <br />
                     </p>
                 </Modal.Body>
@@ -127,7 +128,20 @@ const ProveedorModal = ({show, onHide, nombre, modalType,ventaArticulo: proveedo
                                         {formik.errors.diasDemora}
                                     </Form.Control.Feedback >
                                 </Form.Group>
-                                
+                                <Form.Group controlId="formPrecio">
+                                    <Form.Label>Costo del pedido</Form.Label>
+                                    <Form.Control
+                                        name="costoPedido"
+                                        type="text"
+                                        value={formik.values.costoPedido ||''}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        isInvalid={Boolean( formik.errors.costoPedido&&formik.touched.costoPedido)}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        {formik.errors.costoPedido}
+                                    </Form.Control.Feedback >
+                                </Form.Group>
 
                                 <Modal.Footer className="mt-4">
                                     <Button variant="secondary" onClick={onHide}> Cancelar </Button>

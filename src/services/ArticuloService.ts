@@ -26,36 +26,92 @@ export const ArticuloService = {
         return data;
     },
 
-    createVenta:async (articulo: Articulo): Promise<Articulo> => {
+    createVenta: async (
+            nombre: string,
+            precioCompra: number,
+            stockActual: number,
+            stockDeSeguridad: number,
+            loteOptimo: number,
+            cgiArticulo: number,
+            puntoPedido: number,
+            costoAlmacenamiento: number,
+            tiempoEntrePedidos: number,
+            cantMax: number,
+            cantAPedir: number,
+            modeloInventario: string,
+            proveedorArticulo: string
+    ): Promise<Articulo> => {
+        const params = new URLSearchParams();
+        params.append("nombre", nombre);
+        params.append("precioCompra", precioCompra.toString());
+        params.append("stockActual", stockActual.toString());
+        params.append("stockDeSeguridad", stockDeSeguridad.toString());
+        params.append("loteOptimo", loteOptimo.toString());
+        params.append("cgiArticulo", cgiArticulo.toString());
+        params.append("puntoPedido", puntoPedido.toString());
+        params.append("costoAlmacenamiento", costoAlmacenamiento.toString());
+        params.append("tiempoEntrePedidos", tiempoEntrePedidos.toString());
+        params.append("cantMax", cantMax.toString());
+        params.append("cantAPedir", cantAPedir.toString());
+        params.append("modeloInventario", modeloInventario.toString());
+        params.append("proveedorArticulo", proveedorArticulo.toString());
+    
         const response = await fetch(`${BASE_URL}/Articulo/create`, {
-            method: "POST", 
+            method: "POST",
             headers: {
-                'Accept': '*/*',
-                'Authorization': `Bearer ` + localStorage.getItem('token'),
-                'Content-Type': 'application/json'
+                "Content-Type": "application/x-www-form-urlencoded"
             },
-            body: JSON.stringify(articulo)
+            body: params.toString()
         });
-
+    
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    
         const data = await response.json();
         return data;
-
     },
 
-    updateVenta: async (id: number, articulo: Articulo): Promise<Articulo> => {
-        const response = await fetch(`${BASE_URL}/Articulo/${id}`, {
-            method: "PUT",
-            headers: {
-                'Accept': '*/*',
-                'Authorization': `Bearer ` + localStorage.getItem('token'),
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(articulo)
-        });
-
-        const data = await response.json();
-        return data;
-    }, 
+    updateVenta: async (
+        id: number, 
+        nombre: string,
+        precioCompra: number,
+        stockActual: number,
+        stockDeSeguridad: number,
+        loteOptimo: number,
+        cgiArticulo: number,
+        puntoPedido: number,
+        costoAlmacenamiento: number,
+        tiempoEntrePedidos: number,
+        cantMax: number,
+        cantAPedir: number,
+        modeloInventario: string,
+        proveedorArticulo: string
+    ) => {
+        try {
+            const response = await fetch(
+                `${BASE_URL}/Articulo/actualizar?id=${id}&nombre=${encodeURIComponent(nombre)}&precioCompra=${precioCompra}&stockActual=${stockActual}&stockDeSeguridad=${stockDeSeguridad}&loteOptimo=${loteOptimo}&cgiArticulo=${cgiArticulo}&puntoPedido=${puntoPedido}&costoAlmacenamiento=${costoAlmacenamiento}&tiempoEntrePedidos=${tiempoEntrePedidos}&cantMax=${cantMax}&cantAPedir=${cantAPedir}&modeloInventario=${encodeURIComponent(modeloInventario)}&proveedorArticulo=${encodeURIComponent(proveedorArticulo)}`, 
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                }
+            );
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error during update:', error);
+            throw error; // rethrow the error to be caught in handleSaveUpdate
+        }
+    },
+    
 
     deleteVenta:async (id:number): Promise<void> => {
         await fetch (`${BASE_URL}/Articulo/${id}`,{

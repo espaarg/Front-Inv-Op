@@ -16,6 +16,7 @@ function ProveedorTable() {
         id: 0,
         nombreProveedor: '',
         diasDemora: 0,
+        costoPedido:0,
     });
     const [nombre, setNombre] = useState('');
 
@@ -36,6 +37,7 @@ function ProveedorTable() {
             id: 0,
             nombreProveedor: '',
             diasDemora: 0,
+            costoPedido:0,
         };
     };
 
@@ -64,7 +66,8 @@ function ProveedorTable() {
                                 <Card.Body>
                                     <Card.Title>{proveedor.nombreProveedor}</Card.Title>
                                     <Card.Text>
-                                        Días de demora: {proveedor.diasDemora}
+                                        Días de demora: {proveedor.diasDemora} <br />
+                                        Costo de pedido: {proveedor.costoPedido}
                                     </Card.Text>
                                     <div className="d-flex justify-content-between">
                                         <EditButton onClick={() => handleClick('Editar proveedor', proveedor, ModalType.UPDATE)} />
