@@ -12,6 +12,7 @@ function ArticuloTable() {
     const [articulos, setArticulos] = useState<Articulo[]>([]);
     const [refreshData, setRefreshData] = useState(false);
     const [sortConfig, setSortConfig] = useState<{ key: keyof Articulo; direction: string } | null>(null);
+    
 
     useEffect(() => {
         const fetchArticulos = async () => {
@@ -138,13 +139,13 @@ function ArticuloTable() {
                                 <td>{articulo.precioCompra}</td>
                                 <td>{articulo.stockActual}</td>
                                 <td>{articulo.stockDeSeguridad}</td>
-                                <td>{articulo.loteOptimo}</td>
+                                <td>{articulo.modeloInventario=="LOTEFIJO" ? articulo.loteOptimo: "--"}</td>
                                 <td>{articulo.cgiArticulo.toFixed(2)}</td> {/* Aquí se asegura que se muestre con dos decimales */}
-                                <td>{articulo.puntoPedido}</td>
+                                <td>{articulo.modeloInventario=="LOTEFIJO" ? articulo.puntoPedido: "--"}</td>
                                 <td>{articulo.costoAlmacenamiento}</td>
-                                <td>{articulo.cantMax}</td>
-                                <td>{articulo.cantAPedir}</td>
-                                <td>{articulo.tiempoEntrePedidos}</td>
+                                <td>{articulo.modeloInventario=="INTERVALOFIJO" ? articulo.cantMax: "--"}</td>
+                                <td>{articulo.modeloInventario=="INTERVALOFIJO" ? articulo.cantAPedir: "--"}</td>
+                                <td>{articulo.modeloInventario=="INTERVALOFIJO" ? articulo.tiempoEntrePedidos:"--"}</td>
                                 <td>{articulo.modeloInventario}</td>
                                 <td>{articulo.proveedorArticulo}</td>
                                 <td>
