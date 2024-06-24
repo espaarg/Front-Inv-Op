@@ -13,4 +13,6 @@ export interface Articulo{
     cantAPedir: number;
     modeloInventario: string;
     proveedorArticulo: string;
+    seleccionado: boolean; // Atributo para manejar la selección
+
 }

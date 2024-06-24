@@ -1,5 +1,6 @@
 export interface Venta{
     id: number;
     montoTotal: number;    
-    fechaVenta: string;
+    fecha: string;
+
 }

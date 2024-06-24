@@ -24,7 +24,7 @@ function VentaTable() {
     const initializableNewVenta = (): Venta => ({
         id: 0,
         montoTotal: 0,
-        fechaVenta: '',
+        fecha: '',
     });
 
     const [venta, setVenta] = useState<Venta>(initializableNewVenta);
@@ -76,7 +76,7 @@ function VentaTable() {
                             <tr key={venta.id} style={{ textAlign: 'center' }}>
                                 <td>{venta.id}</td>
                                 <td>{venta.montoTotal}</td>
-                                <td>{venta.fechaVenta}</td>
+                                <td>{venta.fecha}</td>
                                 <td>
                                     <DetalleButton onClick={() => handleClick('Ver detalle de venta', venta, ModalType.DETAIL)} />
                                 </td>

@@ -67,6 +67,8 @@ function ArticuloTable() {
         tiempoEntrePedidos: 0,
         modeloInventario: "",
         proveedorArticulo: "",
+        seleccionado: false, // Atributo para manejar la selección
+
     });
 
     const [articulo, setArticulo] = useState<Articulo>(initializableNewArticulo);

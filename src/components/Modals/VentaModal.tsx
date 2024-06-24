@@ -1,118 +1,159 @@
-import { Button, Form, Modal } from "react-bootstrap";
-import { ModalType } from "../../types/ModalType";
-
-import { Venta } from "../../types/Venta";
-import { VentaService } from "../../services/VentaService";
-import { toast } from "react-toastify";
-import VentaArticuloTable from "../Tables/VentaArticuloTable";
+import { Button, Form, Modal, Table } from 'react-bootstrap';
+import { ModalType } from '../../types/ModalType';
+import { Venta } from '../../types/Venta';
+import { useState, useEffect } from 'react';
+import { ArticuloService } from '../../services/ArticuloService';
+import { Articulo } from '../../types/Articulo';
+import 'react-toastify/dist/ReactToastify.css';
 
 type VentaModalProps = {
-    show:boolean;
-    onHide: ()=> void;
+    show: boolean;
+    onHide: () => void;
     nombre: string;
     modalType: ModalType;
     venta: Venta;
     refreshData: React.Dispatch<React.SetStateAction<boolean>>;
-}
+};
 
-const VentaModal = ({show, onHide, nombre, modalType,venta: venta, refreshData}: VentaModalProps) => {
+const VentaModal = ({
+    show,
+    onHide,
+    nombre,
+    modalType,
+    venta,
+    refreshData,
+}: VentaModalProps) => {
+    const [articulos, setArticulos] = useState<Articulo[]>([]);
+    const [articulosSeleccionados, setArticulosSeleccionados] = useState<{ articulo: Articulo, cantidad: number, invalid: boolean }[]>([]);
 
-    //CREATE-ACTUALIZAR
-    const handleSaveUpdate = async (venta:Venta) => {
-        try {
-            const isNew = venta.id ===0;
-            if(isNew){
-                await VentaService.createVenta(venta);
-            } else {
-                await VentaService.updateVenta(venta.id,venta);
+    useEffect(() => {
+        const fetchArticulos = async () => {
+            try {
+                const articulos = await ArticuloService.getVentas();
+                setArticulos(Array.isArray(articulos) ? articulos : []);
+            } catch (error) {
+                console.error("Error fetching articulos: ", error);
+                setArticulos([]);
             }
-            toast.success(isNew ? "Venta creada" : "Venta modificada", {position: "top-center"})
+        };
+
+        fetchArticulos();
+    }, []);
+
+    const handleGuardar = async () => {
+        try {
+            // Validar que todas las cantidades sean válidas (mayores que cero y dentro del stock)
+            const cantidadesValidas = articulosSeleccionados.every(as => as.cantidad > 0 && as.cantidad <= as.articulo.stockActual);
+            if (!cantidadesValidas) {
+                alert('Por favor, ingrese una cantidad válida para cada artículo seleccionado.');
+                return;
+            }
+
+            // Aquí puedes procesar los artículos seleccionados con sus cantidades
+            // Por ejemplo, guardar en la base de datos, enviar a un servicio, etc.
+
+            // Limpia la selección y oculta el modal
+            setArticulosSeleccionados([]);
             onHide();
-            refreshData(prevState=>!prevState)
+            refreshData(prevState => !prevState);
         } catch (error) {
-            console.error(error);
-            toast.error("Ha ocurrido un error")
+            console.error('Error al guardar las ventas:', error);
+            alert('Ha ocurrido un error al guardar las ventas.');
         }
     };
 
-    const handleDelete = async () => {
-        try {
-            await VentaService.deleteVenta(venta.id);
-            toast.success("Venta eliminada" , {position:"top-center"})
-            onHide();
-            refreshData(prevState=>!prevState)
-        }catch (error){
-            console.error(error);
-            toast.success("Ha ocurrido un error")
+    const handleCancelar = () => {
+        // Limpia la selección y oculta el modal
+        setArticulosSeleccionados([]);
+        onHide();
+    };
+
+    const handleCantidadChange = (articuloId: number, nuevaCantidad: number) => {
+        setArticulosSeleccionados(prevArticulos =>
+            prevArticulos.map(as =>
+                as.articulo.id === articuloId ? { ...as, cantidad: nuevaCantidad, invalid: nuevaCantidad < 0 || nuevaCantidad > as.articulo.stockActual } : as
+            )
+        );
+    };
+
+    const handleArticuloSelect = (articulo: Articulo) => {
+        // Verificar si el artículo ya está seleccionado
+        const articuloExistente = articulosSeleccionados.find(as => as.articulo.id === articulo.id);
+
+        if (articuloExistente) {
+            // Si ya está seleccionado, deseleccionar
+            setArticulosSeleccionados(prevArticulos =>
+                prevArticulos.filter(as => as.articulo.id !== articulo.id)
+            );
+        } else {
+            // Si no está seleccionado, agregarlo con una cantidad inicial (puedes ajustar esto según tus necesidades)
+            setArticulosSeleccionados(prevArticulos => [
+                ...prevArticulos,
+                { articulo: articulo, cantidad: 1, invalid: false } // Cantidad inicial y estado de validez inicial
+            ]);
         }
-    }
-
-
-    /* //Esquema de validacion yup
-    const validationSchema = () => {
-        return Yup.object().shape({
-            id: Yup.number().integer().min(0),
-            nombre: Yup.string().required('Nombre requerido'),
-            precioCompra: Yup.number().min(0).required('Se requiere un precio'),
-            stockActual: Yup.number().min(0).required('Se requiere ingresar el stock actual de ese producto'),
-            stockDeSeguridad: Yup.number().min(0),
-            loteOptimo: Yup.number().min(0),
-            cgiArticulo: Yup.number().min(0),
-        })
-    }
-
-    //FORMULARIO formik, esquema de validacion dinamico para evaluar errores
-
-    const formik = useFormik ({
-        initialValues: venta,
-        validationSchema: validationSchema(),
-        validateOnChange: true,
-        validateOnBlur: true,
-        onSubmit:(obj: Venta) => handleSaveUpdate(obj),
-    }); */
+    };
 
     return (
         <>
-        {modalType === ModalType.DELETE ?  (
-            <>  
-            <Modal show={show} onHide={onHide} centered backdrop="static">
+            <Modal show={show} onHide={handleCancelar} centered backdrop="static" className="modal-xl">
                 <Modal.Header closeButton>
                     <Modal.Title>{nombre}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p>¿Está seguro de eliminar la venta?
-                    <strong>{venta.id}</strong>? <br />
-                    </p>
+                    <Form>
+                        <Table striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th>Seleccionar</th>
+                                    <th>Nombre Artículo</th>
+                                    <th>Stock Actual</th>
+                                    <th>Cantidad a Vender</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {articulos.map(articulo => (
+                                    <tr key={articulo.id}>
+                                        <td>
+                                            <Form.Check
+                                                type="checkbox"
+                                                onChange={() => handleArticuloSelect(articulo)}
+                                                checked={!!articulosSeleccionados.find(as => as.articulo.id === articulo.id)}
+                                            />
+                                        </td>
+                                        <td>{articulo.nombre}</td>
+                                        <td>{articulo.stockActual}</td>
+                                        <td>
+                                            <Form.Control
+                                                type="number"
+                                                min={0}
+                                                max={articulo.stockActual}
+                                                value={articulosSeleccionados.find(as => as.articulo.id === articulo.id)?.cantidad || ''}
+                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                    const cantidad = Number(e.target.value);
+                                                    handleCantidadChange(articulo.id, cantidad); // Llama a handleCantidadChange con el valor
+                                                }}
+                                                isInvalid={!!articulosSeleccionados.find(as => as.articulo.id === articulo.id)?.invalid} // Usa el estado de validez
+                                                disabled={!articulosSeleccionados.find(as => as.articulo.id === articulo.id)}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={onHide}> Cancelar </Button>
-                    <Button variant="danger" onClick={handleDelete}>Eliminar</Button>
+                    <Button variant="secondary" onClick={handleCancelar}>
+                        Cancelar
+                    </Button>
+                    <Button variant="success" onClick={handleGuardar}>
+                        Guardar
+                    </Button>
                 </Modal.Footer>
-
             </Modal>
-            </>
-        ) : (
-            <>
-            
-            <Modal show= { show} onHide={onHide} centered backdrop= "static" className="modal- xl">
-                <Modal.Header style={{display:'flex', flexDirection:'column'}}>
-                    <Modal.Title> {nombre} </Modal.Title>
-                       <Modal.Body>
-                                
-                                <VentaArticuloTable ventaID={venta.id} />
-                                <Modal.Footer className="mt-4">
-                                    <Button variant="secondary" onClick={onHide}> Volver </Button>
-                                </Modal.Footer>
-                        </Modal.Body>
-                </Modal.Header>
-            </Modal>
-            </>
-        )}
         </>
-    )
+    );
+};
 
-
-
-}
-
-export default VentaModal
+export default VentaModal;
