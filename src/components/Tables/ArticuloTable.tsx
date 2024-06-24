@@ -108,6 +108,7 @@ function ArticuloTable() {
                 >
                     Añadir articulo
                 </Button>
+            
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
                 <Table striped bordered hover style={{ width: '100%', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
@@ -170,6 +171,7 @@ function ArticuloTable() {
                     refreshData={setRefreshData}
                 />
             )}
+            
         </>
     );
 }

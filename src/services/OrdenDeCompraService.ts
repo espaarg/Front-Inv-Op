@@ -12,9 +12,21 @@ export const OrdenDeCompraService = {
         return data;
     },
 
-    getArticulo: async (id: number): Promise<OrdenDeCompra> => {
+    confirmarOrdenDeCompra : async (id: number) => {
+        const url = `${BASE_URL}/confirmar?id=${id}`;
+    
+        const response = await fetch(url, {
+            method: "POST", 
+            
+        });
+    
+        const responseData = await response.text();
+        return responseData;
+    },
 
-        const response = await fetch(`${BASE_URL}/${id}`, {
+    getArticulo: async (id2: number): Promise<OrdenDeCompra> => {
+
+        const response = await fetch(`${BASE_URL}/${id2}`, {
             method: "GET",
             headers: {
                 'Accept': '*/*',
@@ -26,21 +38,41 @@ export const OrdenDeCompraService = {
         return data;
     },
 
-    createVenta:async (articulo: OrdenDeCompra): Promise<OrdenDeCompra> => {
-        const response = await fetch(`${BASE_URL}`, {
-            method: "POST", 
+    createOC: async (
+        articulo: number,
+        cantidad: number,
+        proveedorArticulo: number
+    ): Promise<string> => {
+    
+        if (!articulo || cantidad <= 0 || !proveedorArticulo) {
+            throw new Error('Valores inválidos proporcionados');
+        }
+    
+        const url = `${BASE_URL}/create?idArticulo=${articulo}&cantidad=${encodeURIComponent(cantidad)}&idProveedor=${proveedorArticulo}`;
+    
+        const response = await fetch(url, {
+            method: "POST",
             headers: {
                 'Accept': '*/*',
                 'Authorization': `Bearer ` + localStorage.getItem('token'),
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(articulo)
+            }
         });
-
-        const data = await response.json();
-        return data;
-
+    
+        if (!response.ok) {
+            const errorText = await response.text();
+            try {
+                const errorObj = JSON.parse(errorText);
+                throw new Error(errorObj.error || `Error: ${response.status}`);
+            } catch {
+                throw new Error(`Error: ${response.status} - ${errorText}`);
+            }
+        }
+    
+        const responseData = await response.text();
+        return responseData;
     },
+    
 
     updateVenta: async (id: number, articulo: OrdenDeCompra): Promise<OrdenDeCompra> => {
         const response = await fetch(`${BASE_URL}/${id}`, {

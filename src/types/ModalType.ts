@@ -3,5 +3,6 @@ export enum ModalType {
     CREATE,
     UPDATE,
     DELETE,
-    DETAIL
+    DETAIL,
+    CREATEORDEN
 }
