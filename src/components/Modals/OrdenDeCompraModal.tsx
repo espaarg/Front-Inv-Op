@@ -11,6 +11,9 @@ import { useState, useEffect } from 'react';
 import { ArticuloService } from '../../services/ArticuloService';
 import { ProveedorService } from '../../services/ProveedorService';
 import 'react-toastify/dist/ReactToastify.css';
+import { MCAService } from '../../services/MCAService';
+import { MCA } from '../../types/MCA';
+import '../../styles/ModalOrden.css'
 
 type OrdenDeCompraModalProps = {
     show: boolean;
@@ -157,24 +160,57 @@ const OrdenDeCompraModal = ({
         }
     };
 
-    const handleCantidadChange = (proveedorId: string, cantidad: number) => {
-        // Aquí decides el nuevo valor de cantAPedir
-        const newCantAPedir = cantidad > 0 ? cantidad : 1;
+    //Traigo MCA
 
-        setVentasPorProveedor({
-            ...ventasPorProveedor,
-            [proveedorId]: {
-                ...ventasPorProveedor[proveedorId],
-                cantidad: newCantAPedir,
-            },
-        });
+    const mcaF= {
+        id:1,
+        valor:0.54
+    }
+
+    const [mca, setMca] = useState<MCA>(mcaF);
+
+    
+
+
+    useEffect(() => {
+        const fetchMCA = async () => {
+            try {
+                const mcas = await MCAService.getVentas();
+                    setMca(mcas[0]);
+                
+            } catch (error) {
+                console.error("Error fetching MCAs: ", error);
+            }
+        };
+
+        fetchMCA();
+    }, []);
+
+    //Personalizacion modal
+    const customModalStyles = {
+        modalDialog: {
+             // Ajusta este valor según tus necesidades
+             minWidth: '1000px', // O cualquier tamaño máximo deseado
+             widht:'auto' 
+
+        },
+
+        modalGeneral: {
+            minWidth: "1000px",
+        },
+
+        modalContainer: {
+            backgroundColor: 'transparent', /* Remove white background */
+          }
+          
+
     };
 
     return (
         <>
             {modalType === ModalType.DELETE ? (
                 <>
-                    <Modal show={show} onHide={onHide} centered backdrop="static">
+                    <Modal show={show} onHide={onHide} centered backdrop="static" >
                         <Modal.Header closeButton>
                             <Modal.Title>{nombre}</Modal.Title>
                         </Modal.Header>
@@ -195,7 +231,8 @@ const OrdenDeCompraModal = ({
                 </>
             ) : (
                 <>
-                    <Modal show={show} onHide={onHide} size="xl" centered backdrop="static">
+                    <Modal show={show} onHide={onHide}  centered backdrop="static" style={customModalStyles.modalContainer}>
+                    <Modal.Dialog size= "auto" style={customModalStyles.modalDialog}>
                         <Modal.Header closeButton>
                             <Modal.Title>{nombre}</Modal.Title>
                         </Modal.Header>
@@ -235,12 +272,13 @@ const OrdenDeCompraModal = ({
                                             <thead>
                                                 <tr>
                                                     <th>Modelo de Inventario</th>
+                                                    <th>Costo proveedor</th>
+                                                    <th>Costo Total</th>
                                                     {selectedArticulo && selectedArticulo.modeloInventario === 'LOTEFIJO' && (
                                                         <>
                                                             <th>Lote Óptimo</th>
                                                             <th>CGI Artículo</th>
                                                             <th>Costo de Almacenamiento</th>
-                                                            <th>Cantidad Máxima</th>
                                                         </>
                                                     )}
                                                     {selectedArticulo && selectedArticulo.modeloInventario === 'INTERVALOFIJO' && (
@@ -262,37 +300,58 @@ const OrdenDeCompraModal = ({
                                                     {selectedArticulo && (
                                                         <>
                                                             <td>{selectedArticulo.modeloInventario}</td>
+                                                            <td>{proveedor.costoPedido}</td>
                                                             {selectedArticulo.modeloInventario === 'LOTEFIJO' && (
                                                                 <>
+                                                                    <td>{(selectedArticulo.precioCompra ) * (cantPerso>0 ? cantPerso : selectedArticulo.loteOptimo) + proveedor.costoPedido}</td>
                                                                     <td>{selectedArticulo.loteOptimo}</td>
                                                                     <td>{selectedArticulo.cgiArticulo}</td>
-                                                                    <td>{selectedArticulo.costoAlmacenamiento}</td>
-                                                                    <td>{selectedArticulo.cantMax}</td>
+                                                                    <td>{((mca.valor/2 )* (cantPerso>0 ? cantPerso : selectedArticulo.loteOptimo)).toFixed(2)}</td>
+                                                                    <td>
+                                                                        <Form.Group controlId="formNombre">
+                                                                            <Form.Control
+                                                                            min={0}
+                                                                            max={100000}
+                                                                            type="number"
+                                                                            name="cantPerso"
+                                                                            value={cantPerso}
+                                                                            onChange={handleChange}
+                                                                            placeholder="---"
+                                                                            />
+                                                                        </Form.Group>
+                                                                        </td>
                                                                 </>
                                                             )}
                                                             {selectedArticulo.modeloInventario === 'INTERVALOFIJO' && (
                                                                 <>
+                                                                    <td>{(selectedArticulo.precioCompra ) * (cantPerso>0 ? cantPerso : selectedArticulo.cantAPedir) + proveedor.costoPedido}</td>
                                                                     <td>{selectedArticulo.cgiArticulo}</td>
-                                                                    <td>{selectedArticulo.costoAlmacenamiento}</td>
+                                                                    <td>{((mca.valor/2 ) * (cantPerso>0 ? cantPerso : selectedArticulo.cantAPedir)).toFixed(2)}</td>
                                                                     <td>{selectedArticulo.cantMax}</td>
                                                                     <td>
                                                                         {selectedArticulo.cantAPedir}
                                                                     </td>
                                                                     <td>{selectedArticulo.tiempoEntrePedidos}</td>
+                                                                    <td>
+                                                                    <Form.Group controlId="formNombre">
+                                                                        <Form.Control
+                                                                        min={0}
+                                                                        max={selectedArticulo.modeloInventario==='INTERVALOFIJO' ? selectedArticulo.cantMax : 100000}
+                                                                        type="number"
+                                                                        name="cantPerso"
+                                                                        value={cantPerso}
+                                                                        onChange=
+                                                                        {(e: React.ChangeEvent<HTMLInputElement>) => {
+                                                                            handleChange(e); // Llama a handleCantidadChange con el valor
+                                                                        }}
+                                                                        isInvalid={(selectedArticulo.cantMax<cantPerso)? true : false} // Usa el estado de validez
+                                                                        placeholder="---"
+                                                                        />
+                                                                    </Form.Group>
+                                                                    </td>
                                                                 </>
                                                             )}
-                                                            <td>
-                                                            <Form.Group controlId="formNombre">
-                                                                <Form.Control
-                                                                min={0}
-                                                                type="number"
-                                                                name="cantPerso"
-                                                                value={cantPerso}
-                                                                onChange={handleChange}
-                                                                placeholder="---"
-                                                                />
-                                                            </Form.Group>
-                                                            </td>
+                                                           
                                                             <td>
                                                                 <Button
                                                                     variant="success"
@@ -323,6 +382,7 @@ const OrdenDeCompraModal = ({
                                 </Modal.Footer>
                             </Form>
                         </Modal.Body>
+                        </Modal.Dialog>
                     </Modal>
                     <ToastContainer />
                 </>

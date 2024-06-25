@@ -1,0 +1,12 @@
+.modal-container {
+    background-color: transparent; /* Remove white background */
+
+  }
+
+  .modal-content {
+    position: absolute; /* Make content absolute for positioning */
+    top: 50%;
+    left: 38%;
+    transform: translate(-50%, -50%); /* Center content within container */
+  }
+  
