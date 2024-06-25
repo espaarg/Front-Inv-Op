@@ -2,88 +2,53 @@ import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import { VentaArticulo } from '../../types/VentaArticulo';
 import { VentaArticuloService } from '../../services/VentaArticuloService';
-import { ModalType } from '../../types/ModalType';
 import { Button } from 'react-bootstrap';
 
+function VentaArticuloTable({ ventaID }: { ventaID: number }) {
+    const [ventaArticulos, setVentaArticulos] = useState<VentaArticulo[]>([]);
+
+    useEffect(() => {
+        const fetchVentaArticulos = async () => {
+            const ventaArticulos = await VentaArticuloService.getVentaArticulo(ventaID);
+            setVentaArticulos(ventaArticulos);
+        };
+        fetchVentaArticulos();
+    }, [ventaID]);
+
+    console.log(JSON.stringify(ventaArticulos, null, 2));
 
 
-function VentaArticuloTable({ ventaID}: {ventaID: number}) {
 
-    const[ventaArticulos, setVentaArticulos] = useState<VentaArticulo[]>([]);
 
-    //Actualiza la tabla cada vez que se produce un cambio
-const[refreshData, setRefreshData] = useState (false);
 
-//Se ejecuta cada vez que se renderiza el componente o refreshData cambia de estado
-    useEffect(()=> {
-      const fetchVentaArticulos = async ()=> {
-        const ventaArticulos = await VentaArticuloService.getVentaArticulo(ventaID);
-        setVentaArticulos(ventaArticulos);
-  
-      };
-      fetchVentaArticulos();
-    }, [ventaID]
-  );
 
-  console.log(JSON.stringify(ventaArticulos,null,2));
-
-  const initializableNewVentaArticulo = (): VentaArticulo => {
-
-    return {
-      id:0,
-      nombreArticulo:"",
-      subTotal:0,
-      cantidadArticulo:0,
-    };
-  
-  };
-  
-  //articulo seleccionado que se va a pasar como prop al Modal
-  const [VentaArticulo, setVentaArticulo] = useState<VentaArticulo>(initializableNewVentaArticulo);
-  
-  //const para manejar el estado del modal
-  const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState<ModalType>(ModalType.NONE);
-  const [nombre, setNombre] = useState("");
-  
-  //Logica del modal
-  const handleClick = (newNombre: string, VentaArticulo: VentaArticulo, modal: ModalType ) => {
-    setNombre(newNombre);
-    setModalType(modal);
-    setVentaArticulo(VentaArticulo);
-    setShowModal(true);
-  }
-  
-
-  return (
-    <>
-    <div style={{display:'flex', justifyContent:'end'}}>      
-    </div>
-      <div style={{display:'flex',justifyContent:'center', margin:'20px'}}>
-      <Table striped bordered hover style={{ width: '100%', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
-      <thead>
-        <tr>
-          <th>Id</th>
-          <th>Nombre</th>
-          <th>SubTotal</th>
-          <th>Cantidad</th>
-        </tr>
-      </thead>
-      <tbody>
-        {ventaArticulos.map(ventaArticulo=> (
-          <tr key = {ventaArticulo.id}>
-              <td>{ventaArticulo.id}</td>
-              <td>{ventaArticulo.nombreArticulo}</td>
-              <td>{ventaArticulo.subTotal}</td>
-              <td>{ventaArticulo.cantidadArticulo}</td>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
-    </div>
-
-    </>
-  );
+    return (
+        <>
+            
+            <div style={{ display: 'flex', justifyContent: 'center', margin: '20px', backgroundColor:'gainsboro', borderRadius:'10px', padding:'10px' }}>
+                <Table striped bordered hover style={{ width: '100%', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', borderCollapse: 'separate', borderSpacing: '0 15px' }}>
+                    <thead style={{ backgroundColor: '#343a40', color: '#fff' }}>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombre</th>
+                            <th>SubTotal</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {ventaArticulos.map(ventaArticulo => (
+                            <tr key={ventaArticulo.id} style={{ backgroundColor: '#fff', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', transition: 'transform 0.2s ease-in-out' }} onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.01)')} onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}>
+                                <td style={{ padding: '15px', borderTop: 'none', borderTopLeftRadius: '10px', borderBottomLeftRadius: '10px' }}>{ventaArticulo.id}</td>
+                                <td style={{ padding: '15px', borderTop: 'none' }}>{ventaArticulo.nombreArticulo}</td>
+                                <td style={{ padding: '15px', borderTop: 'none' }}>{ventaArticulo.subTotal}</td>
+                                <td style={{ padding: '15px', borderTop: 'none', borderTopRightRadius: '10px', borderBottomRightRadius: '10px' }}>{ventaArticulo.cantidadArticulo}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+            </div>
+        </>
+    );
 }
 
 export default VentaArticuloTable;

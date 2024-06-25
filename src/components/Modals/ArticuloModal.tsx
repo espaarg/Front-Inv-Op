@@ -50,6 +50,7 @@ const ArticuloModal = ({
         cantAPedir: articulo?.cantAPedir || 0,
         modeloInventario: articulo?.modeloInventario || '',
         proveedorArticulo: articulo?.proveedorArticulo || '',
+        seleccionado: false
     };
 
     const handleSaveUpdate = async (values: Articulo) => {

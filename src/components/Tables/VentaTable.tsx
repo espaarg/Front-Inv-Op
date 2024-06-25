@@ -2,14 +2,13 @@ import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import { ModalType } from '../../types/ModalType';
 import { Button } from 'react-bootstrap';
-import DeleteButton from '../DeleteButton/DeleteButton';
 import VentaModal from '../Modals/VentaModal';
 import { VentaService } from '../../services/VentaService';
 import { Venta } from '../../types/Venta';
 import DetalleButton from '../DetalleButton/DetalleButton';
+import '../../styles/VentaTable.css'; // Importar el archivo CSS
 
 function VentaTable() {
-
     const [ventas, setVentas] = useState<Venta[]>([]);
     const [refreshData, setRefreshData] = useState(false);
 
@@ -41,47 +40,32 @@ function VentaTable() {
 
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '20px 0' }}>
+            <div className="venta-table-header">
                 <Button
                     onClick={() => handleClick('Nueva venta', initializableNewVenta(), ModalType.CREATE)}
-                    style={{
-                        width: '150px',
-                        backgroundColor: '#007bff',
-                        borderColor: '#007bff',
-                        color: '#fff',
-                        fontWeight: 'bold',
-                        borderRadius: '5px',
-                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                        transition: 'background-color 0.3s ease, transform 0.3s ease',
-                    }}
-                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#0056b3')}
-                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
+                    className="btn-custom"
                 >
                     Añadir venta
                 </Button>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
-                <Table striped bordered hover style={{ width: '100%', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
-                    <thead style={{ backgroundColor: '#f8f9fa' }}>
+            <div className="venta-table-container">
+                <Table striped bordered hover className="venta-table">
+                    <thead>
                         <tr>
                             <th>Id</th>
                             <th>Monto Total</th>
                             <th>Fecha de Venta</th>
                             <th>Ver Detalle</th>
-                            <th>Borrar</th>
                         </tr>
                     </thead>
                     <tbody>
                         {ventas.map((venta) => (
-                            <tr key={venta.id} style={{ textAlign: 'center' }}>
+                            <tr key={venta.id}>
                                 <td>{venta.id}</td>
                                 <td>{venta.montoTotal}</td>
                                 <td>{venta.fecha}</td>
                                 <td>
                                     <DetalleButton onClick={() => handleClick('Ver detalle de venta', venta, ModalType.DETAIL)} />
-                                </td>
-                                <td>
-                                    <DeleteButton onClick={() => handleClick('Eliminar venta', venta, ModalType.DELETE)} />
                                 </td>
                             </tr>
                         ))}

@@ -1,10 +1,13 @@
-import { Button, Form, Modal, Table } from 'react-bootstrap';
+import { Button, Form, Modal, ModalDialog, Table } from 'react-bootstrap';
 import { ModalType } from '../../types/ModalType';
 import { Venta } from '../../types/Venta';
 import { useState, useEffect } from 'react';
 import { ArticuloService } from '../../services/ArticuloService';
 import { Articulo } from '../../types/Articulo';
 import 'react-toastify/dist/ReactToastify.css';
+import { VentaService } from '../../services/VentaService';
+import { toast } from 'react-toastify';
+import VentaArticuloTable from '../Tables/VentaArticuloTable';
 
 type VentaModalProps = {
     show: boolean;
@@ -53,12 +56,18 @@ const VentaModal = ({
             // Por ejemplo, guardar en la base de datos, enviar a un servicio, etc.
 
             // Limpia la selección y oculta el modal
+            
+            VentaService.createVenta(articulosSeleccionados);
             setArticulosSeleccionados([]);
             onHide();
-            refreshData(prevState => !prevState);
+            setTimeout(() => {
+                refreshData(prevState => !prevState);
+            }, 500);
+            toast.success('Venta creada con éxito', { position: 'top-center' });
         } catch (error) {
-            console.error('Error al guardar las ventas:', error);
-            alert('Ha ocurrido un error al guardar las ventas.');
+            console.error('Error al crear la venta:', error);
+            toast.error('Error al crear la venta', { position: 'top-center' });
+
         }
     };
 
@@ -94,13 +103,33 @@ const VentaModal = ({
         }
     };
 
+
+
+
     return (
         <>
-            <Modal show={show} onHide={handleCancelar} centered backdrop="static" className="modal-xl">
+        {modalType === ModalType.DETAIL ?  (
+            <>  
+            <Modal show={show} onHide={onHide} centered backdrop="static">
                 <Modal.Header closeButton>
                     <Modal.Title>{nombre}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                <VentaArticuloTable ventaID={venta.id} />
+                </Modal.Body>
+                <Modal.Footer>
+
+                </Modal.Footer>
+
+            </Modal>
+            </>
+        ) :(
+        <div >
+        <Modal show={show} onHide={handleCancelar} centered className="l" style={{paddingTop:'400px'}}>
+            <Modal.Header closeButton >
+                <Modal.Title>{nombre}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
                     <Form>
                         <Table striped bordered hover>
                             <thead>
@@ -143,15 +172,18 @@ const VentaModal = ({
                         </Table>
                     </Form>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCancelar}>
-                        Cancelar
-                    </Button>
-                    <Button variant="success" onClick={handleGuardar}>
-                        Guardar
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleCancelar}>
+                    Cancelar
+                </Button>
+                <Button variant="success" onClick={handleGuardar}>
+                    Guardar
+                </Button>
+            </Modal.Footer>
+        </Modal>
+        </div>
+        )
+    }
         </>
     );
 };
