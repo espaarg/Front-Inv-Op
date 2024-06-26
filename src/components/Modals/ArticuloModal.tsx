@@ -8,8 +8,8 @@ import { ArticuloService } from '../../services/ArticuloService';
 import { toast } from 'react-toastify';
 import { Proveedor } from '../../types/Proveedor';
 import { ProveedorService } from '../../services/ProveedorService';
-import { ModeloInventario } from '../../types/ModeloInventario';
-import { ModeloInventarioService } from '../../services/ModeloInventarioService';
+import { ModeloInventario } from '../Enums/Enum';
+import { ModeloInventarioService } from '../../services/EnumService';
 
 type ArticuloModalProps = {
     show: boolean;

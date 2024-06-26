@@ -68,6 +68,19 @@ const MainMenu = () => {
                 <div className="col">
                     <Card style={{ width: '100%', minHeight: '200px', marginBottom: '20px' }}>
                         <Card.Body>
+                            <Card.Title>Predicciones de demanda</Card.Title>
+                            <Card.Text>
+                                Gestiona las predicciones.
+                            </Card.Text>
+                            <LinkContainer to="/predicciones">
+                                <Button variant="primary">Ir a Predicciones</Button>
+                            </LinkContainer>
+                        </Card.Body>
+                    </Card>
+                </div>
+                <div className="col">
+                    <Card style={{ width: '100%', minHeight: '200px', marginBottom: '20px' }}>
+                        <Card.Body>
                             <Card.Title>Proveedores</Card.Title>
                             <Card.Text>
                                 Administra los proveedores y la información relacionada.

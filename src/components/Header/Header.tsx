@@ -85,6 +85,15 @@ const Header = () => {
                         </Nav.Link>
                         <Nav.Link
                             as={Link}
+                            to="/predicciones"
+                            style={styles.navLink}
+                            onMouseOver={handleMouseOver}
+                            onMouseOut={handleMouseOut}
+                        >
+                            Prediciones
+                        </Nav.Link>
+                        <Nav.Link
+                            as={Link}
                             to="/proveedores"
                             style={styles.navLink}
                             onMouseOver={handleMouseOver}
