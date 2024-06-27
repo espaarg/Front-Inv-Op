@@ -70,8 +70,6 @@ function DemandaHistoricaTable() {
                         return new Date(a.fechaFin).getTime() - new Date(b.fechaFin).getTime();
                     case 'cantidadPeriodo':
                         return a.cantidadPeriodo.localeCompare(b.cantidadPeriodo);
-                    case 'metodoCalculoError':
-                        return a.metodoCalculoError.localeCompare(b.metodoCalculoError);
                     case 'metodoPrediccion':
                         return a.metodoPrediccion.localeCompare(b.metodoPrediccion);
                     case 'fijacionErrorAceptable':
@@ -91,8 +89,6 @@ function DemandaHistoricaTable() {
                         return new Date(b.fechaFin).getTime() - new Date(a.fechaFin).getTime();
                     case 'cantidadPeriodo':
                         return b.cantidadPeriodo.localeCompare(a.cantidadPeriodo);
-                    case 'metodoCalculoError':
-                        return b.metodoCalculoError.localeCompare(a.metodoCalculoError);
                     case 'metodoPrediccion':
                         return b.metodoPrediccion.localeCompare(a.metodoPrediccion);
                     case 'fijacionErrorAceptable':
@@ -143,7 +139,6 @@ function DemandaHistoricaTable() {
                                 <th onClick={() => handleSort('fechaInicio')} style={{ cursor: 'pointer' }}>Fecha Inicio Periodo</th>
                                 <th onClick={() => handleSort('fechaFin')} style={{ cursor: 'pointer' }}>Fecha Fin Periodo</th>
                                 <th onClick={() => handleSort('cantidadPeriodo')} style={{ cursor: 'pointer' }}>Cantidad de periodos</th>
-                                <th onClick={() => handleSort('metodoCalculoError')} style={{ cursor: 'pointer' }}>Metodo de calculo del error</th>
                                 <th onClick={() => handleSort('metodoPrediccion')} style={{ cursor: 'pointer' }}>Metodo de prediccion</th>
                                 <th onClick={() => handleSort('fijacionErrorAceptable')} style={{ cursor: 'pointer' }}>Fijacion del error aceptable</th>
                                 <th>Ver detalle</th>
@@ -157,7 +152,6 @@ function DemandaHistoricaTable() {
                                     <td>{venta.fechaInicio}</td>
                                     <td>{venta.fechaFin}</td>
                                     <td>{venta.cantidadPeriodo}</td>
-                                    <td>{venta.metodoCalculoError}</td>
                                     <td>{venta.metodoPrediccion}</td>
                                     <td>{venta.fijacionErrorAceptable}</td>
                                     <td>                                    
