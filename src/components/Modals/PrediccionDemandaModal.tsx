@@ -1,15 +1,16 @@
-import { Button, Form, Modal, ModalDialog, Table } from 'react-bootstrap';
+import { Button, Form, Modal } from 'react-bootstrap';
 import { ModalType } from '../../types/ModalType';
-import { Venta } from '../../types/Venta';
 import { useState, useEffect } from 'react';
 import { ArticuloService } from '../../services/ArticuloService';
 import { Articulo } from '../../types/Articulo';
 import 'react-toastify/dist/ReactToastify.css';
-import { VentaService } from '../../services/VentaService';
 import { toast } from 'react-toastify';
 import VentaArticuloTable from '../Tables/VentaArticuloTable';
-import { PrediccionDemanda } from '../../pages/PrediccionDemanda';
+import { PrediccionDemanda } from '../../types/PrediccionDemanda';
 import { PrediccionDemandaService } from '../../services/PrediccionDemandaService';
+import { Enum } from '../Enums/Enum';
+import { EnumService } from '../../services/EnumService';
+import DatePickerComponent from '../DatePicker/DatePickerComponent';
 
 type PrediccionDemandaModalProps = {
     show: boolean;
@@ -28,38 +29,143 @@ const PrediccionDemandaModal = ({
     venta,
     refreshData,
 }: PrediccionDemandaModalProps) => {
-    const [articulos, setArticulos] = useState<PrediccionDemanda[]>([]);
-    const [articulosSeleccionados, setArticulosSeleccionados] = useState<{ articulo: Articulo, cantidad: number, invalid: boolean }[]>([]);
 
-    useEffect(() => {
-        const fetchArticulos = async () => {
-            try {
-                const articulos = await PrediccionDemandaService.getVentas();
-                setArticulos(Array.isArray(articulos) ? articulos : []);
-            } catch (error) {
-                console.error("Error fetching articulos: ", error);
-                setArticulos([]);
-            }
+    //ARTICULO
+    const [articulos, setArticulos] = useState<Articulo[]>([]);
+    const [articulosSeleccionados, setArticulosSeleccionados] = useState<{ articulo: Articulo}[]>([]);
+
+const [selectedArticulo, setSelectedArticulo] = useState<Articulo | null>(null);
+
+const handleArticuloChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const articuloId = event.target.value as string;
+    const selected = articulos.find(articulo => articulo.id === Number(articuloId)) || null;
+    setSelectedArticulo(selected);
+};
+
+useEffect(() => {
+    const fetchArticulos = async () => {
+        try {
+            const articulos = await ArticuloService.getVentas();
+            setArticulos(Array.isArray(articulos) ? articulos : []);
+        } catch (error) {
+            console.error("Error fetching articulos: ", error);
+            setArticulos([]);
+        }
+    };
+
+    fetchArticulos();
+}, [refreshData]);
+
+const handleArticuloSelect = (articulo: Articulo) => {
+    // Verificar si el artículo ya está seleccionado
+    const articuloExistente = articulosSeleccionados.find(as => as.articulo.id === articulo.id);
+
+    if (articuloExistente) {
+        // Si ya está seleccionado, deseleccionar
+        setArticulosSeleccionados(prevArticulos =>
+            prevArticulos.filter(as => as.articulo.id !== articulo.id)
+        );
+    } else {
+        // Si no está seleccionado, agregarlo con una cantidad inicial (puedes ajustar esto según tus necesidades)
+        setArticulosSeleccionados(prevArticulos => [
+            ...prevArticulos,
+            { articulo: articulo, cantidad: 1, invalid: false } // Cantidad inicial y estado de validez inicial
+        ]);
+    }
+};
+
+//ENUMS
+
+const [cantidadPeriodo, setCantidadPeriodo] = useState<string>('');
+const [fijacionErrorAceptable, setFijacionErrorAceptable] = useState<string>('');
+const [metodoCalculoError, setMetodoCalculoError] = useState<string>('');
+const [metodoPrediccion, setMetodoPrediccion] = useState<string>('');
+
+const [cantPer, setCantPer] = useState<Enum[]>([]);
+const [fijError, setFijError] = useState<Enum[]>([]);
+const [metCalc, setMetCalc] = useState<Enum[]>([]);
+const [metPred, setMetPred] = useState<Enum[]>([]);
+
+useEffect(() => {
+    const fetchEnums = async () => {
+        try {
+            const cantPer = await EnumService.getCantPer();
+            setCantPer(Array.isArray(cantPer) ? cantPer : []);
+
+            const fijError = await EnumService.getFijError();
+            setFijError(Array.isArray(fijError) ? fijError : []);
+
+            const metCalc = await EnumService.getMetCalc();
+            setMetCalc(Array.isArray(metCalc) ? metCalc : []);
+
+            const metPred = await EnumService.getMetPred();
+            setMetPred(Array.isArray(metPred) ? metPred : []);
+        } catch (error) {
+            console.error("Error fetching Enums: ", error);
+        }
+    };
+
+    fetchEnums();
+}, [refreshData]);
+
+const handleCantidadPeriodoChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const articuloId = event.target.value as string;
+    setCantidadPeriodo(articuloId);
+};
+
+const handleFijErrorChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const articuloId = event.target.value as string;
+    setFijacionErrorAceptable(articuloId);
+};
+
+const handleMetodoPrediccionChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const articuloId = event.target.value as string;
+    setMetodoPrediccion(articuloId);
+};
+
+const handleMetCalcErrorChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const articuloId = event.target.value as string;
+    setMetodoCalculoError(articuloId);
+};
+
+
+const handleSaveUpdate = async () => {
+    try {
+        const prediccionDemanda = {
+            articuloID: selectedArticulo?.id || 0,
+            cantidadPeriodo: cantidadPeriodo,
+            fijacionErrorAceptable: fijacionErrorAceptable,
+            metodoPrediccion: metodoPrediccion,
+            fechaInicio: dateStrIni,
+            fechaFin: dateStrFin,
+            metodoCalculoError:"",
+            fechaPedido:"",
+            articulo: "",
+            id: 0,
+            porcentajeDeError: 0,
+
         };
 
-        fetchArticulos();
-    }, []);
+        await PrediccionDemandaService.createPrediccion(prediccionDemanda);
+        onHide();
+        refreshData(prevState => !prevState);
+        toast.success('Predicción creada con éxito', { position: 'top-center' });
+    } catch (error) {
+        console.error('Error al crear la predicción:', error);
+        toast.error('Error al crear la predicción', { position: 'top-center' });
+    }
+};
 
     const handleGuardar = async () => {
         try {
-            // Validar que todas las cantidades sean válidas (mayores que cero y dentro del stock)
-            const cantidadesValidas = articulosSeleccionados.every(as => as.cantidad > 0 && as.cantidad <= as.articulo.stockActual);
-            if (!cantidadesValidas) {
-                alert('Por favor, ingrese una cantidad válida para cada artículo seleccionado.');
-                return;
-            }
+
 
             // Aquí puedes procesar los artículos seleccionados con sus cantidades
             // Por ejemplo, guardar en la base de datos, enviar a un servicio, etc.
 
             // Limpia la selección y oculta el modal
             
-            VentaService.createVenta(articulosSeleccionados);
+            // PrediccionDemandaService.createVenta(articulosSeleccionados);
             setArticulosSeleccionados([]);
             onHide();
             setTimeout(() => {
@@ -79,33 +185,33 @@ const PrediccionDemandaModal = ({
         onHide();
     };
 
-    const handleCantidadChange = (articuloId: number, nuevaCantidad: number) => {
-        setArticulosSeleccionados(prevArticulos =>
-            prevArticulos.map(as =>
-                as.articulo.id === articuloId ? { ...as, cantidad: nuevaCantidad, invalid: nuevaCantidad < 0 || nuevaCantidad > as.articulo.stockActual } : as
-            )
-        );
-    };
 
-    const handleArticuloSelect = (articulo: Articulo) => {
-        // Verificar si el artículo ya está seleccionado
-        const articuloExistente = articulosSeleccionados.find(as => as.articulo.id === articulo.id);
+    //SELECCION DE FECHAS
+    const [selectedDateInicio, setSelectedDateInicio] = useState<Date | null>(null);
+    const [dateStrIni, setDateStringIni] = useState<string>("");
 
-        if (articuloExistente) {
-            // Si ya está seleccionado, deseleccionar
-            setArticulosSeleccionados(prevArticulos =>
-                prevArticulos.filter(as => as.articulo.id !== articulo.id)
-            );
+    const handleDateChangeInicio = (dateIni: Date | null) => {
+        setSelectedDateInicio(dateIni);
+        if (dateIni) {
+            const dateStrFin = dateIni.toISOString().split('T')[0]; // Extraer la parte de la fecha
+            setDateStringIni(dateStrFin);
         } else {
-            // Si no está seleccionado, agregarlo con una cantidad inicial (puedes ajustar esto según tus necesidades)
-            setArticulosSeleccionados(prevArticulos => [
-                ...prevArticulos,
-                { articulo: articulo, cantidad: 1, invalid: false } // Cantidad inicial y estado de validez inicial
-            ]);
+            setDateStringIni("null");
         }
     };
 
+    const [selectedDateFin, setSelectedDateFin] = useState<Date | null>(null);
+    const [dateStrFin, setDateStringFin] = useState<string >("");
 
+    const handleDateChangeFin = (dateFin: Date | null) => {
+        setSelectedDateFin(dateFin);
+        if (dateFin) {
+            const dateStrFin = dateFin.toISOString().split('T')[0]; // Extraer la parte de la fecha
+            setDateStringFin(dateStrFin);
+        } else {
+            setDateStringFin("null");
+        }
+    };
 
 
     return (
@@ -127,154 +233,108 @@ const PrediccionDemandaModal = ({
             </>
         ) :(
         <div >
-        <Modal show={show} onHide={handleCancelar} centered className="l" style={{paddingTop:'400px'}}>
+        <Modal show={show} onHide={handleCancelar} centered className="l">
             <Modal.Header closeButton >
                 <Modal.Title>{nombre}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                     <Form>
-                    <Form.Group controlId="formProveedorArticulo">
-                                    <Form.Label>Artículo</Form.Label>
-                                    <Form.Control
-                                        as="select"
-                                        name="proveedorArticulo"
-                                        value={formik.values.proveedorArticulo}
-                                        onChange={(e) => {
-                                            handleArticuloChange(e);
-                                            handleProveedorChange(e.target.value);
-                                            
-                                        }}
-                                        onBlur={formik.handleBlur}
-                                        isInvalid={formik.touched.proveedorArticulo && !!formik.errors.proveedorArticulo}
-                                    >
-                                        <option value="">Selecciona un artículo</option>
-                                        {articulos.map(articulo => (
-                                            <option key={articulo.id} value={articulo.id.toString()}>
-                                                {articulo.nombre}
-                                            </option>
-                                        )
-                                        )}
-                                    </Form.Control>
-                                    <Form.Control.Feedback type="invalid">
-                                        {formik.errors.proveedorArticulo}
-                                    </Form.Control.Feedback>
-                                </Form.Group>
+                    <Form.Group controlId="formProveedorArticulo"
+                    style={{marginBottom:'15px'}}>
+                    <Form.Label>Artículo</Form.Label>
+                    <Form.Control
+                        as="select"
+                        name="proveedorArticulo"
+                        value={"a"}
+                        onChange={(e) => {
+                            handleArticuloChange(e);
+                            
+                        }}                            
+                    >
+                        <option value="">Selecciona un artículo</option>
+                        {articulos.map(articulo => (
+                            <option key={articulo.id} value={articulo.id.toString()}>
+                                {articulo.nombre}
+                            </option>
+                        )
+                        )}
+                    </Form.Control>
+                                
+                    </Form.Group>
+                    <div  style={{marginBottom:'15px'}}>
+                        <label style={{ marginTop: '20px', marginRight: '80px' }}>
+                            Selecciona la fecha de inicio:
+                            <DatePickerComponent selectedDate={selectedDateInicio} onDateChange={handleDateChangeInicio} />
+                        </label>
+                        <label style={{ marginTop: '20px' }}>
+                            Selecciona la fecha de fin:
+                            <DatePickerComponent selectedDate={selectedDateFin} onDateChange={handleDateChangeFin} />
+                        </label>
+                    </div>
 
-                                {proveedores.map(proveedor => (
-                                    <div key={proveedor.id} style={{ marginBottom: '20px' }}>
-                                        <h5>Detalles del artículo para {proveedor.nombreProveedor}</h5>
-                                        <Table striped bordered hover>
-                                            <thead>
-                                                <tr>
-                                                    <th>Modelo de Inventario</th>
-                                                    <th>Costo proveedor</th>
-                                                    <th>Costo Total</th>
-                                                    {selectedArticulo && selectedArticulo.modeloInventario === 'LOTEFIJO' && (
-                                                        <>
-                                                            <th>Lote Óptimo</th>
-                                                            <th>CGI Artículo</th>
-                                                            <th>Costo de Almacenamiento</th>
-                                                        </>
-                                                    )}
-                                                    {selectedArticulo && selectedArticulo.modeloInventario === 'INTERVALOFIJO' && (
-                                                        <>
-                                                            <th>CGI Artículo</th>
-                                                            <th>Costo de Almacenamiento</th>
-                                                            <th>Cantidad Máxima</th>
-                                                            <th>Cantidad a Pedir</th>
-                                                            <th>Tiempo entre Pedidos</th>
-                                                            
-                                                        </>
-                                                    )}
-                                                    <th>Cantidad personalizada</th>
-                                                    <th>Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    {selectedArticulo && (
-                                                        <>
-                                                            <td>{selectedArticulo.modeloInventario}</td>
-                                                            <td>{proveedor.costoPedido}</td>
-                                                            {selectedArticulo.modeloInventario === 'LOTEFIJO' && (
-                                                                <>
-                                                                    <td>{(selectedArticulo.precioCompra ) * (cantPerso>0 ? cantPerso : selectedArticulo.loteOptimo) + proveedor.costoPedido}</td>
-                                                                    <td>{selectedArticulo.loteOptimo}</td>
-                                                                    <td>{selectedArticulo.cgiArticulo}</td>
-                                                                    <td>{((mca.valor/2 )* (cantPerso>0 ? cantPerso : selectedArticulo.loteOptimo)).toFixed(2)}</td>
-                                                                    <td>
-                                                                        <Form.Group controlId="formNombre">
-                                                                            <Form.Control
-                                                                            min={0}
-                                                                            max={100000}
-                                                                            type="number"
-                                                                            name="cantPerso"
-                                                                            value={cantPerso}
-                                                                            onChange={handleChange}
-                                                                            placeholder="---"
-                                                                            />
-                                                                        </Form.Group>
-                                                                        </td>
-                                                                </>
-                                                            )}
-                                                            {selectedArticulo.modeloInventario === 'INTERVALOFIJO' && (
-                                                                <>
-                                                                    <td>{(selectedArticulo.precioCompra ) * (cantPerso>0 ? cantPerso : selectedArticulo.cantAPedir) + proveedor.costoPedido}</td>
-                                                                    <td>{selectedArticulo.cgiArticulo}</td>
-                                                                    <td>{((mca.valor/2 ) * (cantPerso>0 ? cantPerso : selectedArticulo.cantAPedir)).toFixed(2)}</td>
-                                                                    <td>{selectedArticulo.cantMax}</td>
-                                                                    <td>
-                                                                        {selectedArticulo.cantAPedir}
-                                                                    </td>
-                                                                    <td>{selectedArticulo.tiempoEntrePedidos}</td>
-                                                                    <td>
-                                                                    <Form.Group controlId="formNombre">
-                                                                        <Form.Control
-                                                                        min={0}
-                                                                        max={selectedArticulo.modeloInventario==='INTERVALOFIJO' ? selectedArticulo.cantMax : 100000}
-                                                                        type="number"
-                                                                        name="cantPerso"
-                                                                        value={cantPerso}
-                                                                        onChange=
-                                                                        {(e: React.ChangeEvent<HTMLInputElement>) => {
-                                                                            handleChange(e); // Llama a handleCantidadChange con el valor
-                                                                        }}
-                                                                        isInvalid={(selectedArticulo.cantMax<cantPerso)? true : false} // Usa el estado de validez
-                                                                        placeholder="---"
-                                                                        />
-                                                                    </Form.Group>
-                                                                    </td>
-                                                                </>
-                                                            )}
-                                                           
-                                                            <td>
-                                                                <Button
-                                                                    variant="success"
-                                                        
-                                                                    onClick={() => {
-                                                                        const newCantidad = cantPerso > 0 ? cantPerso :
-                                                                                                        selectedArticulo.modeloInventario === 'INTERVALOFIJO'
-                                                                                                        ? selectedArticulo.cantAPedir
-                                                                                                        : selectedArticulo.loteOptimo;
-                                                                        handleSaveUpdate(selectedArticulo?.id || 0, newCantidad, proveedor.id);
-                                                                    }}
-                                                                >
-                                                                    Guardar
-                                                                </Button>
-                                                            </td>
-                                                        </>
-                                                    )}
-                                                </tr>
-                                            </tbody>
-                                        </Table>
-                                    </div>
-                                ))}
+                    <Form.Group controlId="porcentajeDeError"  style={{marginBottom:'15px'}}>
+                    <Form.Label>Cantidad de periodo</Form.Label>
+                    <Form.Control
+                        as="select"
+                        name="cantidadPeriodo"
+                        value={"a"}
+                        onChange={(e) => {
+                            handleCantidadPeriodoChange(e);
+                            
+                        }}                            
+                    >
+                        <option value="">Selecciona una Cantidad de Periodo</option>
+                        {cantPer.map(articulo => (
+                            <option key={articulo.nombre.toString()} value={articulo.nombre.toString()}>
+                                {articulo.nombre}
+                            </option>
+                        )
+                        )}
+                    </Form.Control>
+                    </Form.Group>
 
-                                <Modal.Footer>
-                                    <Button variant="secondary" onClick={onHide}>
-                                        Cancelar
-                                    </Button>
-                                </Modal.Footer>
+                    <Form.Group controlId="porcentajeDeError"  style={{marginBottom:'15px'}}>
+                    <Form.Label>Metodo de Prediccion</Form.Label>
+                    <Form.Control
+                        as="select"
+                        name="metodoPrediccion"
+                        value={"a"}
+                        onChange={(e) => {
+                            handleMetodoPrediccionChange(e);
+                            
+                        }}                            
+                    >
+                        <option value="">Selecciona un Metodo de Prediccion</option>
+                        {metPred.map(articulo => (
+                            <option key={articulo.nombre.toString()} value={articulo.nombre.toString()}>
+                                {articulo.nombre}
+                            </option>
+                        )
+                        )}
+                    </Form.Control>
+                    </Form.Group>
+
+                    <Form.Group controlId="porcentajeDeError"  style={{marginBottom:'15px'}}>
+                    <Form.Label>Fijacion de Error Aceptable</Form.Label>
+                    <Form.Control
+                        as="select"
+                        name="fijacionErrorAceptable"
+                        value={"a"}
+                        onChange={(e) => {
+                            handleFijErrorChange(e);
+                            
+                        }}                            
+                    >
+                        <option value="">Selecciona una Fijacion de Error Aceptable</option>
+                        {fijError.map(articulo => (
+                            <option key={articulo.nombre.toString()} value={articulo.nombre.toString()}>
+                                {articulo.nombre}
+                            </option>
+                        )
+                        )}
+                    </Form.Control>
+                    </Form.Group>
+
                     </Form>
                 </Modal.Body>
             <Modal.Footer>

@@ -1,3 +1,3 @@
-export interface ModeloInventario {
+export interface Enum {
     nombre: String
 }

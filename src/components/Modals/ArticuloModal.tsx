@@ -8,8 +8,8 @@ import { ArticuloService } from '../../services/ArticuloService';
 import { toast } from 'react-toastify';
 import { Proveedor } from '../../types/Proveedor';
 import { ProveedorService } from '../../services/ProveedorService';
-import { ModeloInventario } from '../Enums/Enum';
-import { ModeloInventarioService } from '../../services/EnumService';
+import { Enum } from '../Enums/Enum';
+import { EnumService } from '../../services/EnumService';
 
 type ArticuloModalProps = {
     show: boolean;
@@ -31,7 +31,7 @@ const ArticuloModal = ({
 
     const [proveedores, setProveedores] = useState<Proveedor[]>([]);
 
-    const [modelosInventario, setModelosInventario] = useState<ModeloInventario[]>([]);
+    const [modelosInventario, setModelosInventario] = useState<Enum[]>([]);
 
 
      // Valores iniciales con valores predeterminados
@@ -128,7 +128,7 @@ const ArticuloModal = ({
     useEffect(() => {
         const fetchArticulos = async () => {
             try {
-                const modelosInventario = await ModeloInventarioService.getVentas();
+                const modelosInventario = await EnumService.getVentas();
                 setModelosInventario(Array.isArray(modelosInventario) ? modelosInventario : []);
             } catch (error) {
                 console.error("Error fetching articulos: ", error);
@@ -364,7 +364,7 @@ const ArticuloModal = ({
                             isInvalid={formik.touched.modeloInventario && !!formik.errors.modeloInventario}
                         >
                             <option value="">Selecciona un Modelo de Inventario</option>
-                            {modelosInventario.map((modelo: ModeloInventario) => (
+                            {modelosInventario.map((modelo: Enum) => (
                                 <option key={modelo.nombre=="LOTEFIJO" ? "LOTEFIJO" : "INTERVALOFIJO"} value={modelo.nombre=="LOTEFIJO" ? "LOTEFIJO" : "INTERVALOFIJO"}>
                                     {modelo.nombre}
                                 </option>

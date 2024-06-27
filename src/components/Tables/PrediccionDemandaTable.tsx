@@ -26,6 +26,10 @@ function DemandaHistoricaTable() {
         return {
             id: 0,
 
+            articulo:"",
+            
+            articuloID:0,
+
             porcentajeDeError: 0,
 
             fechaPedido: "",
@@ -115,7 +119,7 @@ function DemandaHistoricaTable() {
             <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
                     <Button
-                        onClick={() => handleClick("Nueva venta", initializableNewVenta(), ModalType.CREATE)}
+                        onClick={() => handleClick("Nueva Prediccion de Demanda", initializableNewVenta(), ModalType.CREATE)}
                         style={{
                             width: '200px',
                             height: '70px',

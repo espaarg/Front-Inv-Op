@@ -18,4 +18,8 @@ metodoPrediccion: string,
 
 fijacionErrorAceptable: string,
 
+articulo: string,
+
+articuloID: number
+
 }

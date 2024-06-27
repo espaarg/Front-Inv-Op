@@ -27,30 +27,27 @@ export const PrediccionDemandaService = {
         return data;
     },
 
-    createVenta: async (articulosSeleccionados: { articulo: Articulo, cantidad: number, invalid: boolean }[]): Promise<string> => {
-        // Filtramos los artículos que no sean válidos
-        const validArticulos = articulosSeleccionados.filter(as => !as.invalid).map(as => ({
-            articuloId: as.articulo.id,
-            cantidad: as.cantidad
-        }));
-
-        const response = await fetch(`${BASE_URL}/create`, {
-            method: 'POST',
-            headers: {
-                'Accept': '*/*',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ articulos: validArticulos }),
+    createPrediccion: async (prediccion: PrediccionDemanda): Promise<any> => {
+        const params = new URLSearchParams({
+            articuloID: prediccion.articuloID.toString(),
+            fechaInicio: prediccion.fechaInicio,
+            fechaFin: prediccion.fechaFin,
+            cantidadPeriodo: prediccion.cantidadPeriodo,
+            metodoPrediccion: prediccion.metodoPrediccion,
+            fijacionErrorAceptable: prediccion.fijacionErrorAceptable,
         });
-
+        
+        const response = await fetch(`${BASE_URL}/create?${params.toString()}`, {
+            method: 'POST',
+        });
+        
         if (!response.ok) {
-            throw new Error(`Error: ${response.statusText}`);
+            throw new Error('Error al crear la predicción');
         }
-
-        const data = await response.json();
-        return data;
+        
+        return await response.json();
     },
+
 
     updateVenta: async (id: number, venta: Venta): Promise<Venta> => {
         const response = await fetch(`${BASE_URL}/Venta/${id}`, {
