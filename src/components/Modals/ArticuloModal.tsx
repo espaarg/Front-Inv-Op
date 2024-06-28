@@ -176,7 +176,7 @@ const ArticuloModal = ({
          {modalType === ModalType.DELETE ?  (
             <>  
             <Modal  show={show} onHide={onHide} centered backdrop="static">
-                <Modal.Header closeButton style={{paddingTop:'400px'}}>
+                <Modal.Header closeButton >
                     <Modal.Title>{nombre}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -386,7 +386,7 @@ const ArticuloModal = ({
                         >
                             <option value="">Selecciona un proveedor</option>
                             {proveedores.map(proveedor => (
-                                <option key={proveedor.id} value={proveedor.id}>
+                                <option key={proveedor.id} value={proveedor.nombreProveedor}>
                                     {proveedor.nombreProveedor} {/* Ajusta según la estructura de tu proveedor */}
                                 </option>
                             ))}
