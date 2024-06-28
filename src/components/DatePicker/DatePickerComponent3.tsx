@@ -14,7 +14,7 @@ const DatePickerComponent3: React.FC<DatePickerComponentProps> = ({ selectedDate
         selected={selectedDate}
         onChange={onDateChange}
         showMonthYearPicker
-        dateFormat="MM"
+        dateFormat="yyyy/MM"
         className="form-control"
       />
     </div>

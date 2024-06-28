@@ -28,23 +28,18 @@ export const PrediccionDemandaService = {
     },
 
     createPrediccion: async (prediccion: PrediccionDemanda): Promise<any> => {
-        const params = new URLSearchParams({
-            articuloID: prediccion.articuloID.toString(),
-            fechaInicio: prediccion.fechaInicio,
-            fechaFin: prediccion.fechaFin,
-            cantidadPeriodo: prediccion.cantidadPeriodo,
-            metodoPrediccion: prediccion.metodoPrediccion,
-            fijacionErrorAceptable: prediccion.fijacionErrorAceptable,
-        });
-        
-        const response = await fetch(`${BASE_URL}/create?${params.toString()}`, {
+        const response = await fetch(`${BASE_URL}/predecirDemanda`, {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(prediccion)
         });
-        
+
         if (!response.ok) {
             throw new Error('Error al crear la predicción');
         }
-        
+
         return await response.json();
     },
 

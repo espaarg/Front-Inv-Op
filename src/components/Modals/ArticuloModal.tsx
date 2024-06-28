@@ -175,8 +175,8 @@ const ArticuloModal = ({
         <>
          {modalType === ModalType.DELETE ?  (
             <>  
-            <Modal show={show} onHide={onHide} centered backdrop="static">
-                <Modal.Header closeButton>
+            <Modal  show={show} onHide={onHide} centered backdrop="static">
+                <Modal.Header closeButton style={{paddingTop:'400px'}}>
                     <Modal.Title>{nombre}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -192,7 +192,7 @@ const ArticuloModal = ({
             </Modal>
             </>
         ) :(
-        <Modal show={show} onHide={onHide} centered backdrop="static">
+        <Modal show={show} onHide={onHide} centered backdrop="static" style={{paddingTop:'400px'}} className="l">
             <Modal.Header closeButton>
                 <Modal.Title>{nombre}</Modal.Title>
                 <p style={{color:'red'}}>***Completar todos los campos o no se creará***</p>

@@ -6,7 +6,7 @@ import { ModalType } from '../../types/ModalType';
 import ArticuloModal from '../Modals/ArticuloModal';
 
 
-function ArticuloReponerTable() {
+function ArticuloFaltanteTable() {
     const [articulos, setArticulos] = useState<Articulo[]>([]);
     const [refreshData, setRefreshData] = useState(false);
     const [sortConfig, setSortConfig] = useState<{ key: keyof Articulo; direction: string } | null>(null);
@@ -15,7 +15,7 @@ function ArticuloReponerTable() {
     useEffect(() => {
         const fetchArticulos = async () => {
             try {
-                const articulos = await ArticuloService.getArticuloReponer();
+                const articulos = await ArticuloService.getArticuloFaltante();
                 setArticulos(Array.isArray(articulos) ? articulos : []);
             } catch (error) {
                 console.error("Error fetching articulos: ", error);
@@ -155,4 +155,4 @@ function ArticuloReponerTable() {
     );
 }
 
-export default ArticuloReponerTable;
+export default ArticuloFaltanteTable;

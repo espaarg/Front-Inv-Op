@@ -12,11 +12,9 @@ fechaFin: string,
 
 cantidadPeriodo: string,
 
-metodoCalculoError: string,
 
 metodoPrediccion: string,
 
-fijacionErrorAceptable: string,
 
 articulo: string,
 
@@ -28,6 +26,21 @@ error: number,
 
 mesAPredecir: number,
 
-anioAPredecir: number
+anioAPredecir: number,
+
+//PMP
+cantidadPeriodosAtrasPMP: number,
+
+coeficientesPonderacion: Array<number>,
+
+//PMSE
+alfa: number,
+
+//cantidadDePeriodosEST
+cantidadDePeriodosEST: number,
+
+cantidadDeaniosAtrasEST: number,
+
+cantUnidadesEsperadasEST: number
 
 }

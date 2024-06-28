@@ -1,6 +1,8 @@
-import { Container, Nav, Navbar, Tab, Tabs } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import {  Tab, Tabs } from 'react-bootstrap';
+import {  useNavigate } from 'react-router-dom';
 import ArticuloTable from '../Tables/ArticuloTable';
+import ArticuloReponerTable from '../Tables/ArticuloReponerTable';
+import ArticuloFaltanteTable from '../Tables/ArticuloFaltante';
 
 
 const HeaderArticulos = () => {
@@ -51,7 +53,10 @@ const HeaderArticulos = () => {
         <ArticuloTable/>
       </Tab>
       <Tab eventKey="Articulos a reponer" title="Articulos a reponer">
-        
+        <ArticuloReponerTable/>
+      </Tab>
+      <Tab eventKey="Articulos faltantes" title="Articulos faltantes">
+        <ArticuloFaltanteTable/>
       </Tab>
     </Tabs>
     );

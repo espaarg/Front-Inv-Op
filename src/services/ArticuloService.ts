@@ -16,6 +16,12 @@ export const ArticuloService = {
         return data;
     },
 
+    getArticuloFaltante:async() : Promise<Articulo[]>=>{
+        const response = await fetch(`${BASE_URL}/Articulo/articulosFaltantes`);
+        const data = await response.json();
+        return data;
+    },
+
     getVentas:async (): Promise<Articulo[]>=>{
         const response = await fetch(`${BASE_URL}/Articulo/all`);
         const data = await response.json();
