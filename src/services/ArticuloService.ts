@@ -6,6 +6,16 @@ const BASE_URL = 'http://localhost:8080';
 
 export const ArticuloService = {
 
+    actualizar: async () =>{
+        const response = await fetch(`${BASE_URL}/Articulo/actualizarValores`);
+    },
+
+    getArticuloReponer:async() : Promise<Articulo[]>=>{
+        const response = await fetch(`${BASE_URL}/Articulo/articulosAReponer`);
+        const data = await response.json();
+        return data;
+    },
+
     getVentas:async (): Promise<Articulo[]>=>{
         const response = await fetch(`${BASE_URL}/Articulo/all`);
         const data = await response.json();

@@ -20,6 +20,14 @@ fijacionErrorAceptable: string,
 
 articulo: string,
 
-articuloID: number
+articuloID: number,
+
+valorPrediccion: number,
+
+error: number,
+
+mesAPredecir: number,
+
+anioAPredecir: number
 
 }

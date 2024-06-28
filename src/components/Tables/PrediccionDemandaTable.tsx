@@ -6,6 +6,8 @@ import { PrediccionDemanda } from '../../types/PrediccionDemanda';
 import { PrediccionDemandaService } from '../../services/PrediccionDemandaService';
 import DetalleButton from '../DetalleButton/DetalleButton';
 import PrediccionDemandaModal from '../Modals/PrediccionDemandaModal';
+import { Articulo } from '../../types/Articulo';
+import { ArticuloService } from '../../services/ArticuloService';
 
 function DemandaHistoricaTable() {
     const [ventas, setVentas] = useState<PrediccionDemanda[]>([]);
@@ -45,6 +47,14 @@ function DemandaHistoricaTable() {
             metodoPrediccion: "",
 
             fijacionErrorAceptable: "",
+
+            valorPrediccion: 0,
+
+            error:0,
+
+            mesAPredecir:0,
+
+            anioAPredecir:0,
         };
     };
 
@@ -114,6 +124,19 @@ function DemandaHistoricaTable() {
         }
     }
 
+    //ARTICULO
+
+    const [articuloNombre, setArticuloNombre] = useState<Articulo[]|null>(null);
+
+    useEffect(() => {
+            const fetchVentas = async () => {
+                const art = await ArticuloService.getVentas();
+                setArticuloNombre(art);
+            };
+            fetchVentas();
+        }, [refreshData, sortBy, sortOrder]);
+
+
     return (
         <>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -140,6 +163,8 @@ function DemandaHistoricaTable() {
                             <tr>
                                 <th onClick={() => handleSort('id')} style={{ cursor: 'pointer' }}>Id</th>
                                 <th onClick={() => handleSort('porcentajeDeError')} style={{ cursor: 'pointer' }}>Porcentaje de Error</th>
+                                <th onClick={() => handleSort('articulo')} style={{ cursor: 'pointer' }}>Articulo</th>
+                                <th onClick={() => handleSort('valorPrediccion')} style={{ cursor: 'pointer' }}>Valor de la Prediccion</th>
                                 <th onClick={() => handleSort('fechaInicio')} style={{ cursor: 'pointer' }}>Fecha Inicio Periodo</th>
                                 <th onClick={() => handleSort('fechaFin')} style={{ cursor: 'pointer' }}>Fecha Fin Periodo</th>
                                 <th onClick={() => handleSort('cantidadPeriodo')} style={{ cursor: 'pointer' }}>Cantidad de periodos</th>
@@ -153,6 +178,8 @@ function DemandaHistoricaTable() {
                                 <tr key={venta.id}>
                                     <td>{venta.id}</td>
                                     <td>{venta.porcentajeDeError}</td>
+                                    <td>{venta.articulo}</td>
+                                    <td>{venta.valorPrediccion}</td>
                                     <td>{venta.fechaInicio}</td>
                                     <td>{venta.fechaFin}</td>
                                     <td>{venta.cantidadPeriodo}</td>

@@ -3,12 +3,11 @@ import Table from 'react-bootstrap/Table';
 import { Articulo } from '../../types/Articulo';
 import { ArticuloService } from '../../services/ArticuloService';
 import { ModalType } from '../../types/ModalType';
-import { Button } from 'react-bootstrap';
 import ArticuloModal from '../Modals/ArticuloModal';
 import EditButton from '../EditButton/EditButton';
 import DeleteButton from '../DeleteButton/DeleteButton';
 
-function ArticuloTable() {
+function ArticuloReponerTable() {
     const [articulos, setArticulos] = useState<Articulo[]>([]);
     const [refreshData, setRefreshData] = useState(false);
     const [sortConfig, setSortConfig] = useState<{ key: keyof Articulo; direction: string } | null>(null);
@@ -17,7 +16,7 @@ function ArticuloTable() {
     useEffect(() => {
         const fetchArticulos = async () => {
             try {
-                const articulos = await ArticuloService.getVentas();
+                const articulos = await ArticuloService.getArticuloReponer();
                 setArticulos(Array.isArray(articulos) ? articulos : []);
             } catch (error) {
                 console.error("Error fetching articulos: ", error);
@@ -98,45 +97,7 @@ function ArticuloTable() {
     return (
         <>
         
-            <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '20px 0' }}>
-                <Button
-                    onClick={() => actualizar()}
-                    style={{
-                        width: '150px',
-                        backgroundColor: '#007bff',
-                        borderColor: '#007bff',
-                        color: '#fff',
-                        fontWeight: 'bold',
-                        borderRadius: '5px',
-                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                        transition: 'background-color 0.3s ease, transform 0.3s ease'
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#0056b3'}
-                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#007bff'}
-                    
-                >
-                    Actualizar valores de los articulos
-                </Button>
-                <div style={{marginLeft:'20px'}}></div>
-                <Button
-                    onClick={() => handleClick("Nuevo articulo", initializableNewArticulo(), ModalType.CREATE)}
-                    style={{
-                        width: '150px',
-                        backgroundColor: '#007bff',
-                        borderColor: '#007bff',
-                        color: '#fff',
-                        fontWeight: 'bold',
-                        borderRadius: '5px',
-                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                        transition: 'background-color 0.3s ease, transform 0.3s ease'
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#0056b3'}
-                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#007bff'}
-                >
-                    Añadir articulo
-                </Button>
-                <div style={{marginLeft:'20px'}}></div>
-            </div>
+            
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
                 <Table striped bordered hover style={{ width: '100%', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
                     <thead style={{ backgroundColor: '#f8f9fa' }}>
@@ -155,8 +116,6 @@ function ArticuloTable() {
                             <th onClick={() => requestSort('tiempoEntrePedidos')}>Tiempo entre pedidos {getSortIndicator('tiempoEntrePedidos')}</th>
                             <th onClick={() => requestSort('modeloInventario')}>Modelo de Inventario {getSortIndicator('modeloInventario')}</th>
                             <th onClick={() => requestSort('proveedorArticulo')}>Proveedor {getSortIndicator('proveedorArticulo')}</th>
-                            <th>Editar</th>
-                            <th>Borrar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -176,12 +135,6 @@ function ArticuloTable() {
                                 <td>{articulo.modeloInventario=="INTERVALOFIJO" ? articulo.tiempoEntrePedidos:"--"}</td>
                                 <td>{articulo.modeloInventario}</td>
                                 <td>{articulo.proveedorArticulo}</td>
-                                <td>
-                                    <EditButton onClick={() => handleClick("Editar articulo", articulo, ModalType.UPDATE)} />
-                                </td>
-                                <td>
-                                    <DeleteButton onClick={() => handleClick("Eliminar articulo", articulo, ModalType.DELETE)} />
-                                </td>
                             </tr>
                         ))}
                     </tbody>
@@ -203,4 +156,4 @@ function ArticuloTable() {
     );
 }
 
-export default ArticuloTable;
+export default ArticuloReponerTable;

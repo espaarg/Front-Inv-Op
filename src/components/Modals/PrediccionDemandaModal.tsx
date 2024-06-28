@@ -10,7 +10,8 @@ import { PrediccionDemanda } from '../../types/PrediccionDemanda';
 import { PrediccionDemandaService } from '../../services/PrediccionDemandaService';
 import { Enum } from '../Enums/Enum';
 import { EnumService } from '../../services/EnumService';
-import DatePickerComponent from '../DatePicker/DatePickerComponent';
+import DatePickerComponent2 from '../DatePicker/DatePickerComponent2';
+import DatePickerComponent3 from '../DatePicker/DatePickerComponent3';
 
 type PrediccionDemandaModalProps = {
     show: boolean;
@@ -56,23 +57,6 @@ useEffect(() => {
     fetchArticulos();
 }, [refreshData]);
 
-const handleArticuloSelect = (articulo: Articulo) => {
-    // Verificar si el artículo ya está seleccionado
-    const articuloExistente = articulosSeleccionados.find(as => as.articulo.id === articulo.id);
-
-    if (articuloExistente) {
-        // Si ya está seleccionado, deseleccionar
-        setArticulosSeleccionados(prevArticulos =>
-            prevArticulos.filter(as => as.articulo.id !== articulo.id)
-        );
-    } else {
-        // Si no está seleccionado, agregarlo con una cantidad inicial (puedes ajustar esto según tus necesidades)
-        setArticulosSeleccionados(prevArticulos => [
-            ...prevArticulos,
-            { articulo: articulo, cantidad: 1, invalid: false } // Cantidad inicial y estado de validez inicial
-        ]);
-    }
-};
 
 //ENUMS
 
@@ -136,13 +120,17 @@ const handleSaveUpdate = async () => {
             cantidadPeriodo: cantidadPeriodo,
             fijacionErrorAceptable: fijacionErrorAceptable,
             metodoPrediccion: metodoPrediccion,
-            fechaInicio: dateStrIni,
-            fechaFin: dateStrFin,
+            fechaInicio: "",
+            fechaFin: "",
             metodoCalculoError:"",
             fechaPedido:"",
             articulo: "",
             id: 0,
             porcentajeDeError: 0,
+            valorPrediccion: 0,
+            error: 0,
+            mesAPredecir: Number(selectedMonthFin),
+            anioAPredecir: Number(selectedYearFin),
 
         };
 
@@ -166,6 +154,8 @@ const handleSaveUpdate = async () => {
             // Limpia la selección y oculta el modal
             
             // PrediccionDemandaService.createVenta(articulosSeleccionados);
+
+            handleSaveUpdate();
             setArticulosSeleccionados([]);
             onHide();
             setTimeout(() => {
@@ -187,29 +177,43 @@ const handleSaveUpdate = async () => {
 
 
     //SELECCION DE FECHAS
-    const [selectedDateInicio, setSelectedDateInicio] = useState<Date | null>(null);
+    const [selectedDateMonth, setSelectedDateMonth] = useState<Date | null>(null);
     const [dateStrIni, setDateStringIni] = useState<string>("");
 
-    const handleDateChangeInicio = (dateIni: Date | null) => {
-        setSelectedDateInicio(dateIni);
+    const handleDateChangeMonth = (dateIni: Date | null) => {
+        setSelectedDateMonth(dateIni);
         if (dateIni) {
             const dateStrFin = dateIni.toISOString().split('T')[0]; // Extraer la parte de la fecha
             setDateStringIni(dateStrFin);
+            const monthFin = (dateIni.getMonth() + 1).toString().padStart(2, '0'); // Extraer el mes y agregar un 0 si es necesario
+            setSelectedMonthFin(monthFin);
+
+
         } else {
             setDateStringIni("null");
+            setSelectedMonthFin("");
+
         }
     };
 
-    const [selectedDateFin, setSelectedDateFin] = useState<Date | null>(null);
-    const [dateStrFin, setDateStringFin] = useState<string >("");
+    const [selectedDateFin, setSelectedDateYear] = useState<Date | null>(null);
+    const [dateStrFin, setDateStringYear] = useState<string >("");
+    const [selectedYearFin, setSelectedYearFin] = useState<string>("");
+    const [selectedMonthFin, setSelectedMonthFin] = useState<string>("");
 
-    const handleDateChangeFin = (dateFin: Date | null) => {
-        setSelectedDateFin(dateFin);
+    const handleDateChangeYear = (dateFin: Date | null) => {
+        setSelectedDateYear(dateFin);
         if (dateFin) {
             const dateStrFin = dateFin.toISOString().split('T')[0]; // Extraer la parte de la fecha
-            setDateStringFin(dateStrFin);
+            setDateStringYear(dateStrFin);
+    
+            const yearFin = dateFin.getFullYear().toString(); // Extraer el año
+            
+    
+            setSelectedYearFin(yearFin);
         } else {
-            setDateStringFin("null");
+            setDateStringYear("null");
+            setSelectedYearFin("");
         }
     };
 
@@ -263,12 +267,12 @@ const handleSaveUpdate = async () => {
                     </Form.Group>
                     <div  style={{marginBottom:'15px'}}>
                         <label style={{ marginTop: '20px', marginRight: '80px' }}>
-                            Selecciona la fecha de inicio:
-                            <DatePickerComponent selectedDate={selectedDateInicio} onDateChange={handleDateChangeInicio} />
+                            Selecciona el mes:
+                            <DatePickerComponent3 selectedDate={selectedDateMonth} onDateChange={handleDateChangeMonth} />
                         </label>
                         <label style={{ marginTop: '20px' }}>
-                            Selecciona la fecha de fin:
-                            <DatePickerComponent selectedDate={selectedDateFin} onDateChange={handleDateChangeFin} />
+                            Selecciona el año:
+                            <DatePickerComponent2 selectedDate={selectedDateFin} onDateChange={handleDateChangeYear} />
                         </label>
                     </div>
 

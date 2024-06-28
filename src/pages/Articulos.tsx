@@ -1,6 +1,6 @@
 import { Button } from "react-bootstrap"
-import ArticuloTable from "../components/Tables/ArticuloTable"
 import { useNavigate } from "react-router-dom"
+import HeaderArticulos from "../components/HeaderArticulos/HeaderArticulos"
 
 const Articulos = () => {
 
@@ -12,7 +12,7 @@ const Articulos = () => {
                 <Button variant="dark" style={{margin:'10px', width:'170px', height:'50px', padding:'5px'}} onClick={() => navigate('/')}>Volver al menú</Button>
                 <h1 style={{paddingLeft:'100px',marginTop:'30px'}}>Articulos</h1>
             </div>          
-            <ArticuloTable/>
+            <HeaderArticulos/>
         </div>
             
    
