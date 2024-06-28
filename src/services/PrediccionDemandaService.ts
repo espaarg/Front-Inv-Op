@@ -1,4 +1,5 @@
 import { Articulo } from "../types/Articulo";
+import { PrediccionDTO } from "../types/PrediccionDTO";
 import { PrediccionDemanda } from "../types/PrediccionDemanda";
 import { Venta } from "../types/Venta";
 
@@ -27,7 +28,7 @@ export const PrediccionDemandaService = {
         return data;
     },
 
-    createPrediccion: async (prediccion: PrediccionDemanda): Promise<any> => {
+    createPrediccion: async (prediccion: PrediccionDTO): Promise<any> => {
         const response = await fetch(`${BASE_URL}/predecirDemanda`, {
             method: 'POST',
             headers: {

@@ -107,34 +107,35 @@ const handleMetodoPrediccionChange = (event: React.ChangeEvent<{ value: unknown 
 const handleSaveUpdate = async () => {
     try {
         const prediccionDemanda = {
-            articuloID: selectedArticulo?.id || 0,
-            cantidadPeriodo: cantidadPeriodo,
-            fijacionErrorAceptable: 0,
-            metodoPrediccion: metodoPrediccion,
-            fechaInicio: "",
-            fechaFin: "",
-            fechaPedido:"",
-            articulo: "",
-            id: 0,
+             
             porcentajeDeError: 0,
-            valorPrediccion: 0,
+            
+            cantidadDePredicciones: cantidadPeriodo,
+            
+            prediccion: 0,
+            
+            idArticulo: selectedArticulo?.id || 0,
+                        
             error: 0,
+            
             mesAPredecir: Number(selectedMonthFin),
+            
             anioAPredecir: Number(selectedYearFin),
+            
             //PMP
             cantidadPeriodosAtrasPMP: cantidadPeriodosAtrasPMP,
-
+            
             coeficientesPonderacion: coeficientesPonderacion,
-
+            
             //PMSE
             alfa: alfa,
-
+            
             //cantidadDePeriodosEST
             cantidadDePeriodosEST: cantidadDePeriodosEST,
-
+            
             cantidadDeaniosAtrasEST: cantidadDeaniosAtrasEST,
-
-            cantUnidadesEsperadasEST: cantUnidadesEsperadasEST,
+            
+            cantUnidadesEsperadasEST: cantUnidadesEsperadasEST
 
         };
 
@@ -364,26 +365,7 @@ const handleSaveUpdate = async () => {
                         
                     </div>
 
-                    <Form.Group controlId="porcentajeDeError"  style={{marginBottom:'15px'}}>
-                    <Form.Label>Metodo de Prediccion</Form.Label>
-                    <Form.Control
-                        as="select"
-                        name="metodoPrediccion"
-                        value={metodoPrediccion}
-                        onChange={(e) => {
-                            handleMetodoPrediccionChange(e);
-                            
-                        }}                            
-                    >
-                        <option value="">Selecciona un Metodo de Prediccion</option>
-                        {metPred.map(articulo => (
-                            <option key={articulo.nombre.toString()} value={articulo.nombre.toString()}>
-                                {articulo.nombre}
-                            </option>
-                        )
-                        )}
-                    </Form.Control>
-                    </Form.Group>
+                    
 
                     <Form.Group controlId="cantidadPeriodosAtrasPMP" style={{ marginBottom: '15px' }}>
                         <Form.Label>Cantidad de Periodos Atras PMP</Form.Label>

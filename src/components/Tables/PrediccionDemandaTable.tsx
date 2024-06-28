@@ -30,11 +30,7 @@ function DemandaHistoricaTable() {
 
             articulo:"",
             
-            articuloID:0,
-
             porcentajeDeError: 0,
-
-            fechaPedido: "",
 
             fechaInicio: "",
 
@@ -42,19 +38,13 @@ function DemandaHistoricaTable() {
 
             cantidadPeriodo: "",
 
-            metodoCalculoError: "",
-
             metodoPrediccion: "",
-
-            fijacionErrorAceptable: "",
 
             valorPrediccion: 0,
 
             error:0,
 
-            mesAPredecir:0,
-
-            anioAPredecir:0,
+        
         };
     };
 
@@ -86,8 +76,6 @@ function DemandaHistoricaTable() {
                         return a.cantidadPeriodo.localeCompare(b.cantidadPeriodo);
                     case 'metodoPrediccion':
                         return a.metodoPrediccion.localeCompare(b.metodoPrediccion);
-                    case 'fijacionErrorAceptable':
-                        return a.fijacionErrorAceptable.localeCompare(b.fijacionErrorAceptable);
                     default:
                         return 0;
                 }
@@ -105,8 +93,6 @@ function DemandaHistoricaTable() {
                         return b.cantidadPeriodo.localeCompare(a.cantidadPeriodo);
                     case 'metodoPrediccion':
                         return b.metodoPrediccion.localeCompare(a.metodoPrediccion);
-                    case 'fijacionErrorAceptable':
-                        return b.fijacionErrorAceptable.localeCompare(a.fijacionErrorAceptable);
                     default:
                         return 0;
                 }
@@ -163,13 +149,13 @@ function DemandaHistoricaTable() {
                             <tr>
                                 <th onClick={() => handleSort('id')} style={{ cursor: 'pointer' }}>Id</th>
                                 <th onClick={() => handleSort('porcentajeDeError')} style={{ cursor: 'pointer' }}>Porcentaje de Error</th>
+                                <th onClick={() => handleSort('error')} style={{ cursor: 'pointer' }}>Error</th>
                                 <th onClick={() => handleSort('articulo')} style={{ cursor: 'pointer' }}>Articulo</th>
                                 <th onClick={() => handleSort('valorPrediccion')} style={{ cursor: 'pointer' }}>Valor de la Prediccion</th>
                                 <th onClick={() => handleSort('fechaInicio')} style={{ cursor: 'pointer' }}>Fecha Inicio Periodo</th>
                                 <th onClick={() => handleSort('fechaFin')} style={{ cursor: 'pointer' }}>Fecha Fin Periodo</th>
                                 <th onClick={() => handleSort('cantidadPeriodo')} style={{ cursor: 'pointer' }}>Cantidad de periodos</th>
                                 <th onClick={() => handleSort('metodoPrediccion')} style={{ cursor: 'pointer' }}>Metodo de prediccion</th>
-                                <th onClick={() => handleSort('fijacionErrorAceptable')} style={{ cursor: 'pointer' }}>Fijacion del error aceptable</th>
                                 <th>Ver detalle</th>
                             </tr>
                         </thead>
@@ -178,13 +164,13 @@ function DemandaHistoricaTable() {
                                 <tr key={venta.id}>
                                     <td>{venta.id}</td>
                                     <td>{venta.porcentajeDeError}</td>
+                                    <td>{venta.error}</td>
                                     <td>{venta.articulo}</td>
                                     <td>{venta.valorPrediccion}</td>
                                     <td>{venta.fechaInicio}</td>
                                     <td>{venta.fechaFin}</td>
                                     <td>{venta.cantidadPeriodo}</td>
                                     <td>{venta.metodoPrediccion}</td>
-                                    <td>{venta.fijacionErrorAceptable}</td>
                                     <td>                                    
                                         <DetalleButton  onClick={() => handleClick('Ver detalle de venta', venta, ModalType.DETAIL)} />
                                     </td>
